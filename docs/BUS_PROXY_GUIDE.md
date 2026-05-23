@@ -8,9 +8,21 @@ GitHub Pages는 정적 파일 호스팅이라 서울 버스 API 키를 안전하
 GitHub Pages 샘플 앱
   -> Apps Script Web App URL
       -> Script Properties의 BUS_API_KEY 사용
-      -> 서울 버스 API 호출
+      -> 서울시 버스 Open API 호출
       -> JSON 결과 반환
 ```
+
+## 버스 API 위치
+
+Google Cloud Console에는 서울 버스 API가 없습니다. Google Cloud에서는 Apps Script, Drive, Gmail 같은 Google API만 켭니다.
+
+서울 마을버스 도착 정보는 서울시 버스 Open API를 기준으로 봅니다.
+
+- 공식 진입점: https://api.bus.go.kr/
+- 호출 베이스 URL: `http://ws.bus.go.kr/api/rest`
+- 이 프로젝트의 엔드포인트: `stationinfo/getStationByUid`
+- 샘플 정류소: 연희빌라 `21347`
+- 샘플 노선: `관악11`
 
 ## 완성 코드 위치
 
@@ -36,17 +48,8 @@ Apps Script 화면에서 `Code.gs`에는 `apps-script/Code.gs` 내용을 붙여�
 2. `스크립트 속성` 또는 `Script Properties` 섹션 찾기
 3. `속성 추가` 클릭
 4. 속성 이름: `BUS_API_KEY`
-5. 값: 공공데이터포털 버스 API 인증키
+5. 값: 서울시 버스 Open API 인증키
 6. 저장
-
-### Encoding 키와 Decoding 키
-
-공공데이터포털은 보통 두 가지 키를 보여줍니다.
-
-- `Encoding`: `%2F`, `%2B`, `%3D` 같은 문자가 들어간 값
-- `Decoding`: `/`, `+`, `=` 같은 문자가 들어간 값
-
-이번 프록시 코드는 둘 중 어느 쪽을 넣어도 동작하도록 처리했습니다. 그래도 수업에서는 `Decoding` 키를 넣는 방식으로 설명하는 것이 덜 헷갈립니다.
 
 주의: API 키는 GitHub, Slack, 교재 화면에 다시 붙여넣지 않는 것이 좋습니다.
 
@@ -106,8 +109,8 @@ https://greatsong.github.io/sample_app/
 ## 자주 나는 오류
 
 - `NO_BUS_API_KEY`: Script Properties에 `BUS_API_KEY`가 없습니다.
-- `SERVICE KEY IS NOT REGISTERED`: 키 승인 반영이 아직 안 됐거나, 서비스가 다른 API 키일 수 있습니다.
-- Encoding 키를 넣었더니 실패: 최신 코드는 자동 처리하지만, 이전 코드를 쓰고 있으면 키가 이중 인코딩될 수 있습니다. `apps-script/Code.gs` 최신 코드로 바꾸세요.
-- Web App URL이 403: 배포 권한이 `모든 사용자`가 아닐 수 있습니다.
+- `SERVICE KEY IS NOT REGISTERED`: 해당 서울 버스 서비스에 승인된 키가 아니거나, 승인 반영이 아직 안 됐을 수 있습니다.
+- “버스 API가 없음”: Google Cloud에서 찾으면 안 나옵니다. 서울시 버스 Open API는 https://api.bus.go.kr/ 에서 확인합니다.
+- Web App URL이 403: 배포 권한이 `모든 사용자`가 아니거나, 첫 실행 권한 승인이 아직 안 되었을 수 있습니다.
 - 앱에서 CORS 오류: GitHub Pages가 서울 버스 API를 직접 호출하고 있는지 확인하세요. 앱에는 Apps Script Web App URL만 넣어야 합니다.
 - 수정했는데 반영 안 됨: Apps Script는 코드를 바꾼 뒤 `배포 > 배포 관리 > 새 버전`으로 다시 배포해야 합니다.
