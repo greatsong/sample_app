@@ -6,6 +6,10 @@ GitHub Pages에 배포하는 정적 웹앱에서 시작해 날씨, 마을버스,
 
 https://greatsong.github.io/sample_app/
 
+## 완성 교재
+
+- [생활 데이터 웹앱 만들기](docs/TEXTBOOK.md)
+
 ## 챕터
 
 1. `chapters/01-github-pages`: GitHub Pages 배포
