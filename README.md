@@ -28,3 +28,14 @@ https://greatsong.github.io/sample_app/
 - 마을버스 도착 정보: Apps Script 프록시 URL 입력 후 활성화
 - NEIS 급식식단정보: 당곡고 샘플 설정, 오늘 기준 가장 가까운 급식일 자동 선택
 - 급식 메뉴 투표: 브라우저 localStorage 저장
+
+## Apps Script 프록시
+
+버스 API 키는 GitHub Pages 코드에 넣지 않습니다.
+
+- Apps Script 원본: [apps-script/Code.gs](apps-script/Code.gs)
+- Apps Script 매니페스트: [apps-script/appsscript.json](apps-script/appsscript.json)
+- 기본 정류소: 연희빌라 `21347`
+- 기본 노선: `관악11`
+
+공공데이터포털의 Encoding 키와 Decoding 키 중 어느 것을 넣어도 처리하도록 프록시 코드를 보강했습니다. 그래도 수업에서는 Decoding 키를 Script Properties에 넣는 방식으로 설명하는 편이 가장 쉽습니다.
