@@ -2,19 +2,21 @@
 
 GitHub Pages, 바이브 코딩, Google Sheets, 날씨 API, 마을버스 API, NEIS 급식 API, DB 연동을 한 번에 경험하는 왕초보용 실습 교재입니다.
 
-## 핵심 변경: 버스 API는 Apps Script 프록시로 연결
+## 핵심 방향
 
-서울 버스 API 키를 GitHub Pages 코드에 넣으면 공개될 수 있고, 브라우저에서 직접 호출하면 HTTP/CORS 문제도 생길 수 있습니다. 그래서 이 교재에서는 다음 구조를 사용합니다.
+이 프로젝트는 처음부터 끝까지 범용 구조로 갑니다.
 
 ```text
-GitHub Pages 웹앱
-  -> Google Apps Script Web App
-      -> Script Properties의 BUS_API_KEY 사용
-      -> 서울 버스 API 호출
-      -> JSON 결과 반환
+GitHub Pages 정적 웹앱
+  -> 공개 API 직접 호출: 날씨, NEIS 급식
+  -> 비밀키 필요한 API: Apps Script 프록시 경유
+  -> 간단 저장: localStorage
+  -> 확장 저장: Google Sheets 또는 Supabase DB
 ```
 
-이 방식은 Streamlit Secrets와 비슷하게 설명할 수 있습니다. 키는 Apps Script의 Script Properties에 저장하고, 웹앱에는 Apps Script Web App URL만 입력합니다.
+서울 버스 API 키를 GitHub Pages 코드에 넣으면 공개될 수 있고, 브라우저에서 직접 호출하면 HTTP/CORS 문제도 생길 수 있습니다. 그래서 버스 API는 Apps Script 프록시를 사용합니다.
+
+이 방식은 Streamlit Secrets와 비슷합니다. 키는 Apps Script의 Script Properties에 저장하고, 웹앱에는 Apps Script Web App URL만 입력합니다.
 
 ## 교재 목표
 
@@ -25,6 +27,7 @@ GitHub Pages 웹앱
 - 날씨, 마을버스, 급식 데이터를 웹 화면에 표시합니다.
 - 급식 메뉴 투표 기능을 만들고 저장 방식의 차이를 설명합니다.
 - Apps Script Script Properties로 API 키를 안전하게 관리합니다.
+- localStorage에서 Google Sheets 또는 Supabase DB로 확장합니다.
 
 ## 01. GitHub Pages 첫 배포
 
@@ -43,16 +46,23 @@ GitHub Pages 웹앱
 index.html과 css/style.css를 기준으로 급식 투표 카드의 버튼을 더 눈에 잘 띄게 만들어줘. 기존 색상은 유지하고 모바일에서도 버튼이 카드 밖으로 나가지 않게 해줘.
 ```
 
+왕초보가 자주 헷갈리는 지점:
+
+- AI가 만든 코드를 바로 믿지 말고 브라우저에서 확인합니다.
+- 한 번에 여러 기능을 요청하면 오류 위치를 찾기 어렵습니다.
+- 파일 이름 대소문자, 폴더 위치, script 태그 순서가 중요합니다.
+- 콘솔 오류는 실패가 아니라 힌트입니다.
+
 ## 03. Google Sheets 연동
 
 Google Sheets는 표 기반 데이터를 설명하기 좋은 첫 데이터 저장소입니다.
 
 핵심 용어:
 
-- Spreadsheet ID
-- Range
-- API Key
-- OAuth
+- Spreadsheet ID: 구글 시트 주소 중간의 긴 문자열
+- Range: 읽을 위치, 예: `Sheet1!A2:C`
+- API Key: 공개 읽기 요청에 쓰는 키
+- OAuth: 사용자 로그인과 권한 동의가 필요한 방식
 
 읽기 전용 공개 데이터는 API Key로 시작할 수 있지만, 중요한 데이터나 쓰기 권한은 서버 또는 OAuth가 필요합니다.
 
@@ -75,7 +85,13 @@ weather: {
 
 서울 버스 API는 직접 호출하지 않고 Apps Script 프록시를 거칩니다.
 
-웹앱 설정값:
+샘플 기본값:
+
+- 정류소: 연희빌라
+- 정류소번호(ARS): `21347`
+- 노선명: `관악11`
+
+웹앱에는 아래 값만 입력합니다.
 
 - Apps Script Web App URL
 - 정류소번호(ARS): `21347`
@@ -85,94 +101,42 @@ weather: {
 
 NEIS 급식식단정보를 사용합니다. 샘플은 당곡고등학교로 설정되어 있습니다.
 
+급식 메뉴는 화면에 표시되고, 각 메뉴에 투표할 수 있습니다.
+
 ## 05. Apps Script 버스 프록시 만들기
 
-### Apps Script 생성
+완성 코드는 리포의 `apps-script/Code.gs`에 들어 있습니다.
+
+진행 순서:
 
 1. https://script.google.com 접속
 2. 새 프로젝트 만들기
-3. `Code.gs`에 아래 코드 붙여넣기
+3. `Code.gs`에 `apps-script/Code.gs` 내용 붙여넣기
+4. 프로젝트 설정 > Script Properties에 `BUS_API_KEY` 추가
+5. 배포 > 새 배포 > 웹 앱 선택
+6. 실행 사용자: 나
+7. 액세스 권한: 모든 사용자
+8. Web App URL을 샘플 앱에 입력
 
-```js
-const BUS_API_BASE = 'http://ws.bus.go.kr/api/rest/stationinfo/getStationByUid';
+Encoding 키와 Decoding 키:
 
-function doGet(e) {
-  const props = PropertiesService.getScriptProperties();
-  const serviceKey = props.getProperty('BUS_API_KEY');
-  const arsId = e.parameter.arsId || '21347';
-  const routeName = e.parameter.routeName || '관악11';
-
-  if (!serviceKey) {
-    return jsonOutput({ error: 'NO_BUS_API_KEY', message: 'Script Properties에 BUS_API_KEY가 없습니다.' });
-  }
-
-  const url = BUS_API_BASE
-    + '?serviceKey=' + encodeURIComponent(serviceKey)
-    + '&arsId=' + encodeURIComponent(arsId)
-    + '&resultType=json';
-
-  const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
-  const payload = JSON.parse(response.getContentText());
-  const header = payload.msgHeader || {};
-
-  if (header.headerCd && header.headerCd !== '0') {
-    return jsonOutput({ error: 'BUS_API_ERROR', message: header.headerMsg, raw: payload });
-  }
-
-  const list = normalizeList(payload.msgBody && payload.msgBody.itemList);
-  const filtered = list.filter(function (item) {
-    const name = String(item.rtNm || item.busRouteAbrv || '');
-    return !routeName || name.indexOf(routeName) !== -1;
-  });
-  const item = filtered[0] || list[0] || null;
-
-  return jsonOutput({ ok: true, arsId: arsId, routeName: routeName, item: item, arrmsg1: item && item.arrmsg1, arrmsg2: item && item.arrmsg2, secondsLeft: item && Number(item.exps1 || item.traTime1 || 0), raw: payload });
-}
-
-function normalizeList(value) {
-  if (!value) return [];
-  return Array.isArray(value) ? value : [value];
-}
-
-function jsonOutput(data) {
-  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
-}
-```
-
-### Script Properties에 키 저장
-
-1. Apps Script 왼쪽 `프로젝트 설정` 클릭
-2. Script Properties 섹션에서 속성 추가
-3. 이름: `BUS_API_KEY`
-4. 값: 공공데이터포털 Decoding 키
-5. 저장
-
-### Web App 배포
-
-1. `배포 > 새 배포`
-2. 유형: 웹 앱
-3. 실행 사용자: 나
-4. 액세스 권한: 모든 사용자
-5. 배포 후 Web App URL 복사
-6. 샘플 앱의 `마을버스 프록시 설정`에 입력
+- Encoding 키: `%2F`, `%2B`, `%3D` 같은 문자가 들어갑니다.
+- Decoding 키: `/`, `+`, `=` 같은 문자가 들어갑니다.
+- 최신 프록시 코드는 둘 중 어느 쪽을 넣어도 처리합니다.
+- 수업에서는 Decoding 키를 넣는 방식으로 안내하면 덜 헷갈립니다.
 
 ## 06. 5분 전 알림
 
-Apps Script에 시간 기반 트리거를 추가하면 됩니다.
+GitHub Pages만으로는 정해진 시간마다 백그라운드 실행을 할 수 없습니다. 그래서 5분 전 알림은 Apps Script 시간 기반 트리거로 처리합니다.
 
-```js
-function checkBusAndSendMail() {
-  const email = 'your-email@example.com';
-  const fakeEvent = { parameter: { arsId: '21347', routeName: '관악11' } };
-  const text = doGet(fakeEvent).getContent();
-  const data = JSON.parse(text);
-  const secondsLeft = Number(data.secondsLeft || 0);
+`apps-script/Code.gs`의 `checkBusAndSendMail` 함수를 사용합니다.
 
-  if (secondsLeft > 0 && secondsLeft <= 300) {
-    MailApp.sendEmail(email, '관악11 도착 알림', '관악11이 약 5분 이내 도착합니다: ' + data.arrmsg1);
-  }
-}
-```
+Script Properties에 추가할 값:
+
+- `BUS_ALERT_EMAIL`: 알림 받을 이메일
+- `BUS_ALERT_ARS_ID`: `21347`
+- `BUS_ALERT_ROUTE_NAME`: `관악11`
+- `BUS_ALERT_COOLDOWN_MINUTES`: `10`
 
 트리거는 `시간 기반`, `분 단위 타이머`, `1분마다`로 설정합니다.
 
@@ -207,6 +171,8 @@ create table meal_votes (
 ## 문제 해결
 
 - `NO_BUS_API_KEY`: Apps Script Script Properties에 `BUS_API_KEY`가 없습니다.
-- `SERVICE KEY IS NOT REGISTERED`: 공공데이터포털 키 승인/반영 문제이거나 다른 API 키입니다.
+- `SERVICE KEY IS NOT REGISTERED`: 키 승인 반영이 아직 안 됐거나, 서비스가 다른 API 키일 수 있습니다.
+- Encoding 키를 넣었더니 실패: 이전 프록시 코드는 키를 이중 인코딩할 수 있습니다. `apps-script/Code.gs` 최신 코드로 바꾸세요.
 - Web App URL 403: Apps Script 배포 권한이 `모든 사용자`가 아닐 수 있습니다.
 - 샘플 앱에서 버스가 안 뜸: 프록시 URL을 넣었는지, 정류소번호가 `21347`인지 확인합니다.
+- 코드를 고쳤는데 그대로임: Apps Script는 수정 후 새 버전으로 다시 배포해야 합니다.
