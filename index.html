@@ -30,10 +30,11 @@
         <h2>마을버스 설정</h2>
         <form id="busSettingsForm" class="settings-form">
           <label>Decoding 인증키<input id="busServiceKey" type="password" autocomplete="off" placeholder="공공데이터포털 Decoding 키"></label>
-          <label>정류소 ID<input id="busStationId" type="text" placeholder="예: 123456"></label>
-          <label>노선 ID<input id="busRouteId" type="text" placeholder="예: 100100118"></label>
+          <label>정류소번호(ARS)<input id="busStationId" type="text" placeholder="연희빌라 기본값: 21345"></label>
+          <label>노선명<input id="busRouteId" type="text" placeholder="관악11"></label>
           <div class="settings-actions"><button type="submit">저장하고 조회</button><button id="clearBusSettings" type="button">설정 삭제</button></div>
         </form>
+        <p class="empty-note">기본값은 관악11 연희빌라(재넘이고개 방향) 정류소번호 21345입니다. 반대 방향은 21347입니다.</p>
         <p class="empty-note">키는 GitHub에 저장되지 않고 이 브라우저에만 저장됩니다.</p>
       </section>
       <section class="panel side-panel">
