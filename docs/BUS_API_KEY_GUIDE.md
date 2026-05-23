@@ -1,83 +1,76 @@
 # 서울 마을버스 API 키 발급 가이드
 
-이 프로젝트의 마을버스 기능은 공공데이터포털의 `서울특별시_버스도착정보조회 서비스`를 기준으로 합니다.
+중요: 서울 마을버스 도착 정보는 일반 검색창이나 Google Cloud API 목록에서 `버스 API`로 찾는 서비스가 아닙니다. 이 프로젝트에서 쓰는 엔드포인트는 서울시 버스 Open API 계열입니다.
 
-공식 페이지:
+공식 진입점:
 
-https://www.data.go.kr/data/15000314/openapi.do
+- 서울시교통정보과 버스정보 Open API: https://api.bus.go.kr/
+- 실제 호출 베이스 URL: `http://ws.bus.go.kr/api/rest`
+- 이 프로젝트에서 쓰는 기능: `stationinfo/getStationByUid`
 
-## 중요한 보안 안내
+## 왜 “버스 API가 없다”고 보이나요?
 
-API 키를 GitHub 공개 저장소에 그대로 올리면 안 됩니다. 이 샘플 앱은 키를 코드에 저장하지 않고, 배포 페이지의 `마을버스 설정` 입력란에 넣으면 현재 브라우저의 `localStorage`에만 저장합니다.
+자주 생기는 원인은 아래입니다.
 
-이미 공개 채팅이나 공개 저장소에 키를 붙여넣었다면 가능하면 공공데이터포털에서 키를 재발급하세요.
+1. Google Cloud Console에서 찾고 있음
+   - Google Cloud에는 서울 버스 API가 없습니다.
+   - Google Cloud는 Apps Script, Drive, Gmail 같은 Google API만 켜는 곳입니다.
 
-## 발급 절차
+2. 공공데이터포털에서 이름이 다르게 보임
+   - 서울 버스 Open API는 `api.bus.go.kr` 쪽 안내를 기준으로 보는 편이 안전합니다.
+   - 공공데이터포털 검색 결과와 실제 서울 버스 API 운영 페이지가 다르게 보일 수 있습니다.
 
-1. https://www.data.go.kr 에 접속합니다.
-2. 로그인합니다. 계정이 없으면 회원가입을 먼저 합니다.
-3. 검색창에 `서울특별시_버스도착정보조회 서비스`를 검색합니다.
-4. 데이터 상세 페이지에서 `활용신청`을 누릅니다.
-5. 활용 목적은 수업/학습용으로 작성합니다.
-6. 신청이 승인되면 `마이페이지 > 오픈API > 개발계정` 또는 해당 API 상세 페이지에서 인증키를 확인합니다.
+3. 다른 서비스의 인증키를 사용함
+   - `SERVICE KEY IS NOT REGISTERED`는 보통 키가 틀렸거나, 해당 서울 버스 서비스에 승인된 키가 아니라는 뜻입니다.
 
-## 앱에서 입력하기
+## 수업 안내용 정리
 
-배포 페이지로 갑니다.
+학생에게는 이렇게 설명하면 덜 헷갈립니다.
 
-https://greatsong.github.io/sample_app/
-
-오른쪽 `마을버스 설정`에 아래 값을 입력합니다.
-
-- Decoding 인증키: 공공데이터포털의 `일반 인증키 (Decoding)` 값
-- 정류소 ID: API가 요구하는 정류소 고유 ID
-- 노선 ID: 버스 노선 ID
-
-입력 후 `저장하고 조회`를 누릅니다.
-
-## 왜 Decoding 키를 넣나요?
-
-앱은 `URLSearchParams`로 요청 URL을 만들기 때문에 특수문자를 자동으로 인코딩합니다. 그래서 입력칸에는 보통 Decoding 키를 넣는 편이 안전합니다.
-
-## 필요한 ID
-
-- `stationId`: 정류소 고유 ID입니다.
-- `busRouteId`: 버스 노선 ID입니다.
-
-정류소 번호처럼 보이는 `arsId`와 API가 요구하는 `stationId`가 다를 수 있습니다. API 문서의 상세기능 중 정류소/노선 검색 API를 함께 사용해 ID를 확인합니다.
-
-## 5분 전 알림 구현 아이디어
-
-버스도착정보조회 서비스 응답에는 도착 메시지와 도착예정시간 필드가 포함됩니다.
-
-예시 필드:
-
-- `arrmsg1`: 첫 번째 버스 도착 안내 메시지
-- `arrmsg2`: 두 번째 버스 도착 안내 메시지
-- `exps1`: 첫 번째 버스 도착예정시간, 초 단위
-- `exps2`: 두 번째 버스 도착예정시간, 초 단위
-
-5분 전 알림 조건은 대략 아래처럼 판단할 수 있습니다.
-
-```js
-const secondsLeft = Number(item.exps1);
-const minutesLeft = Math.round(secondsLeft / 60);
-
-if (minutesLeft <= 5) {
-  // 이메일, Slack, 브라우저 알림 등을 보냅니다.
-}
+```text
+날씨 API: Open-Meteo, 키 없음
+급식 API: NEIS, 공개 조회 중심
+마을버스 API: 서울시 버스 Open API, 키 필요
+키 보관: GitHub Pages가 아니라 Apps Script Script Properties
 ```
 
-## 알림 방식 추천
+## 키 발급 흐름
 
-### 수업용 추천: Google Apps Script
+1. https://api.bus.go.kr/ 접속
+2. 회원가입 또는 로그인
+3. Open API / 인증키 신청 메뉴 찾기
+4. 버스 도착 정보 또는 정류소 정보 조회 관련 서비스 사용 신청
+5. 승인 후 인증키 확인
+6. Apps Script의 Script Properties에 `BUS_API_KEY`로 저장
 
-- 1분마다 버스 API를 조회합니다.
-- 5분 이하 조건이면 `MailApp.sendEmail()`로 메일을 보냅니다.
-- Google 계정만 있으면 실습하기 쉽습니다.
+## 앱에서 사용하는 값
 
-### 실서비스 추천: Cloudflare Workers Cron 또는 Supabase Edge Function
+샘플 기본값:
 
-- 사용자의 정류장/노선/희망 시간을 DB에 저장합니다.
-- 주기적으로 API를 조회합니다.
-- Resend, SendGrid, Gmail API, Slack webhook 등으로 알림을 보냅니다.
+- 정류소: 연희빌라
+- 정류소번호(ARS): `21347`
+- 노선명: `관악11`
+
+Apps Script 프록시는 아래 URL을 호출합니다.
+
+```text
+http://ws.bus.go.kr/api/rest/stationinfo/getStationByUid?serviceKey=키&arsId=21347&resultType=json
+```
+
+## 주의
+
+- API 키는 GitHub 코드에 넣지 않습니다.
+- API 키는 Slack 공개 채널에 다시 올리지 않습니다.
+- 이미 노출된 키는 가능하면 재발급합니다.
+- GitHub Pages에서 `http://ws.bus.go.kr`를 직접 호출하면 HTTPS/CORS 문제로 막힐 수 있으므로 Apps Script 프록시를 사용합니다.
+
+## 5분 전 알림
+
+GitHub Pages만으로는 백그라운드 알림을 계속 실행할 수 없습니다. Apps Script 시간 기반 트리거를 사용합니다.
+
+- 실행 함수: `checkBusAndSendMail`
+- 이벤트 소스: 시간 기반
+- 유형: 분 단위 타이머
+- 간격: 1분마다
+
+도착 예정 시간이 5분 이하이면 `MailApp.sendEmail()`로 메일을 보냅니다.
