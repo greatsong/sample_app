@@ -10,6 +10,7 @@ https://greatsong.github.io/sample_app/
 
 - HTML 교재: https://greatsong.github.io/sample_app/textbook.html
 - Markdown 교재: [생활 데이터 웹앱 만들기](docs/TEXTBOOK.md)
+- 버스 프록시 가이드: [BUS_PROXY_GUIDE.md](docs/BUS_PROXY_GUIDE.md)
 - 버스 API 키 발급 가이드: [BUS_API_KEY_GUIDE.md](docs/BUS_API_KEY_GUIDE.md)
 
 ## 챕터
@@ -24,6 +25,6 @@ https://greatsong.github.io/sample_app/
 ## 현재 포함 기능
 
 - Open-Meteo 서울 현재 날씨: 키 없이 바로 동작
-- 서울시 마을버스 도착 정보: API 키/정류소/노선 설정 후 활성화
+- 마을버스 도착 정보: Apps Script 프록시 URL 입력 후 활성화
 - NEIS 급식식단정보: 당곡고 샘플 설정, 오늘 기준 가장 가까운 급식일 자동 선택
 - 급식 메뉴 투표: 브라우저 localStorage 저장
