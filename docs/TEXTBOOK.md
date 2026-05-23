@@ -2,6 +2,20 @@
 
 GitHub Pages, 바이브 코딩, Google Sheets, 날씨 API, 마을버스 API, NEIS 급식 API, DB 연동을 한 번에 경험하는 왕초보용 실습 교재입니다.
 
+## 핵심 변경: 버스 API는 Apps Script 프록시로 연결
+
+서울 버스 API 키를 GitHub Pages 코드에 넣으면 공개될 수 있고, 브라우저에서 직접 호출하면 HTTP/CORS 문제도 생길 수 있습니다. 그래서 이 교재에서는 다음 구조를 사용합니다.
+
+```text
+GitHub Pages 웹앱
+  -> Google Apps Script Web App
+      -> Script Properties의 BUS_API_KEY 사용
+      -> 서울 버스 API 호출
+      -> JSON 결과 반환
+```
+
+이 방식은 Streamlit Secrets와 비슷하게 설명할 수 있습니다. 키는 Apps Script의 Script Properties에 저장하고, 웹앱에는 Apps Script Web App URL만 입력합니다.
+
 ## 교재 목표
 
 - GitHub Pages에 정적 웹앱을 배포합니다.
@@ -10,139 +24,43 @@ GitHub Pages, 바이브 코딩, Google Sheets, 날씨 API, 마을버스 API, NEI
 - Open API 문서에서 URL, 파라미터, 인증키 위치를 찾습니다.
 - 날씨, 마을버스, 급식 데이터를 웹 화면에 표시합니다.
 - 급식 메뉴 투표 기능을 만들고 저장 방식의 차이를 설명합니다.
-- localStorage에서 Supabase DB로 확장합니다.
+- Apps Script Script Properties로 API 키를 안전하게 관리합니다.
 
-## 프로젝트 구조
+## 01. GitHub Pages 첫 배포
 
-```text
-sample_app/
-  index.html
-  css/style.css
-  js/config.js
-  js/app.js
-  js/adapters/api-services.js
-  js/adapters/vote-store.js
-  chapters/
-  docs/
-```
+1. GitHub에서 새 저장소를 만듭니다.
+2. `index.html`, `css`, `js` 폴더를 올립니다.
+3. Settings > Pages에서 branch 배포를 켭니다.
+4. Pages 주소를 확인합니다.
 
-- `index.html`: 화면의 뼈대입니다.
-- `css/style.css`: 색, 간격, 카드, 버튼 디자인입니다.
-- `js/config.js`: API 설정값을 모아 둡니다.
-- `js/app.js`: 데이터를 불러오고 화면을 갱신합니다.
-- `js/adapters/api-services.js`: 날씨, 버스, 급식 API를 호출합니다.
-- `js/adapters/vote-store.js`: 투표 결과를 브라우저에 저장합니다.
-
-## 01. GitHub Pages로 첫 배포
-
-### 결과물
-
-브라우저에서 아래 형태의 주소가 열립니다.
-
-```text
-https://아이디.github.io/저장소이름/
-```
-
-### GitHub 가입
-
-1. https://github.com 에 접속합니다.
-2. `Sign up`을 누릅니다.
-3. 이메일, 비밀번호, 사용자 이름을 입력합니다.
-4. 이메일 인증을 완료합니다.
-5. 로그인 후 오른쪽 위 프로필 아이콘이 보이면 준비 완료입니다.
-
-### 저장소 만들기
-
-1. 오른쪽 위 `+` 버튼을 누릅니다.
-2. `New repository`를 선택합니다.
-3. Repository name을 입력합니다.
-4. 처음 실습은 `Public`을 권장합니다.
-5. `Create repository`를 누릅니다.
-
-### 파일 올리기
-
-1. 저장소 화면에서 `Add file`을 누릅니다.
-2. `Upload files`를 선택합니다.
-3. `index.html`, `css`, `js` 폴더를 올립니다.
-4. Commit message에 `Add first web app`처럼 적습니다.
-5. `Commit changes`를 누릅니다.
-
-### GitHub Pages 켜기
-
-1. 저장소의 `Settings` 탭으로 갑니다.
-2. 왼쪽 메뉴에서 `Pages`를 누릅니다.
-3. `Deploy from a branch`를 선택합니다.
-4. Branch는 `main` 또는 `master`, folder는 `/root`를 선택합니다.
-5. 저장 후 1~3분 기다립니다.
-6. Pages 주소를 엽니다.
-
-### 자주 나는 실수
-
-- `index.html`이 저장소 맨 위에 없으면 첫 화면이 안 뜹니다.
-- `Index.html`처럼 대문자가 섞이면 못 찾을 수 있습니다.
-- Pages 설정 직후 404는 반영 대기일 수 있습니다.
-- GitHub Pages에 올라간 파일은 공개될 수 있으므로 비밀키를 넣지 않습니다.
+주의: GitHub Pages에 올라간 파일은 공개될 수 있으므로 비밀키를 넣지 않습니다.
 
 ## 02. 바이브 코딩 기본 흐름
 
-바이브 코딩은 AI에게 다 맡기는 방식이 아닙니다. 사람이 목표를 작게 나누고, AI가 만든 결과를 실행하고 검토하는 방식입니다.
-
-### 나쁜 요청
-
-```text
-앱 멋지게 만들어줘.
-```
-
-### 좋은 요청
+좋은 요청은 파일, 목표, 유지할 조건을 함께 말합니다.
 
 ```text
 index.html과 css/style.css를 기준으로 급식 투표 카드의 버튼을 더 눈에 잘 띄게 만들어줘. 기존 색상은 유지하고 모바일에서도 버튼이 카드 밖으로 나가지 않게 해줘.
 ```
 
-### 작업 순서
-
-1. 바꾸고 싶은 점을 하나만 고릅니다.
-2. 관련 파일을 확인합니다.
-3. AI에게 작은 요청을 합니다.
-4. 코드를 적용합니다.
-5. 브라우저에서 확인합니다.
-6. Console 오류를 확인합니다.
-7. 잘 되면 커밋합니다.
-
 ## 03. Google Sheets 연동
 
-Google Sheets는 초보자에게 좋은 첫 데이터 저장소입니다. 표를 만들고, 웹앱에서 읽어올 수 있습니다.
+Google Sheets는 표 기반 데이터를 설명하기 좋은 첫 데이터 저장소입니다.
 
-### 시트 예시
+핵심 용어:
 
-```text
-title | description | source
-학교 급식 | 오늘의 급식 메뉴입니다 | Google Sheets
-버스 정류장 | 우리 학교 앞 정류장 정보입니다 | Google Sheets
-```
+- Spreadsheet ID
+- Range
+- API Key
+- OAuth
 
-### 핵심 용어
+읽기 전용 공개 데이터는 API Key로 시작할 수 있지만, 중요한 데이터나 쓰기 권한은 서버 또는 OAuth가 필요합니다.
 
-- Spreadsheet ID: 구글 시트 주소 중간의 긴 문자열입니다.
-- Range: 읽을 위치입니다. 예: `Sheet1!A2:C`
-- API Key: 공개 읽기 요청에 쓰는 키입니다.
-- OAuth: 사용자 로그인과 권한 동의가 필요한 방식입니다.
-
-### 주의
-
-API Key는 브라우저에 보일 수 있습니다. 읽기 전용 공개 데이터 실습에는 사용할 수 있지만, 중요한 데이터나 쓰기 권한에는 서버가 필요합니다.
-
-## 04. Open API 3종 연결
-
-이번 프로젝트는 세 가지 생활 API를 사용합니다.
+## 04. Open API 3종
 
 ### 날씨 API
 
-Open-Meteo를 사용합니다.
-
-- 키 없이 동작합니다.
-- 서울 위도/경도가 기본 설정입니다.
-- 현재 온도, 습도, 바람 정보를 보여줍니다.
+Open-Meteo를 사용합니다. 키 없이 동작합니다.
 
 ```js
 weather: {
@@ -155,115 +73,126 @@ weather: {
 
 ### 마을버스 API
 
-서울시 버스도착정보조회 서비스를 사용합니다.
+서울 버스 API는 직접 호출하지 않고 Apps Script 프록시를 거칩니다.
 
-필요한 값:
+웹앱 설정값:
 
-- API 인증키
-- 정류소 ID
-- 노선 ID
+- Apps Script Web App URL
+- 정류소번호(ARS): `21347`
+- 노선명: `관악11`
+
+### NEIS 급식 API
+
+NEIS 급식식단정보를 사용합니다. 샘플은 당곡고등학교로 설정되어 있습니다.
+
+## 05. Apps Script 버스 프록시 만들기
+
+### Apps Script 생성
+
+1. https://script.google.com 접속
+2. 새 프로젝트 만들기
+3. `Code.gs`에 아래 코드 붙여넣기
 
 ```js
-villageBus: {
-  enabled: false,
-  serviceKey: "",
-  stationId: "",
-  busRouteId: ""
+const BUS_API_BASE = 'http://ws.bus.go.kr/api/rest/stationinfo/getStationByUid';
+
+function doGet(e) {
+  const props = PropertiesService.getScriptProperties();
+  const serviceKey = props.getProperty('BUS_API_KEY');
+  const arsId = e.parameter.arsId || '21347';
+  const routeName = e.parameter.routeName || '관악11';
+
+  if (!serviceKey) {
+    return jsonOutput({ error: 'NO_BUS_API_KEY', message: 'Script Properties에 BUS_API_KEY가 없습니다.' });
+  }
+
+  const url = BUS_API_BASE
+    + '?serviceKey=' + encodeURIComponent(serviceKey)
+    + '&arsId=' + encodeURIComponent(arsId)
+    + '&resultType=json';
+
+  const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+  const payload = JSON.parse(response.getContentText());
+  const header = payload.msgHeader || {};
+
+  if (header.headerCd && header.headerCd !== '0') {
+    return jsonOutput({ error: 'BUS_API_ERROR', message: header.headerMsg, raw: payload });
+  }
+
+  const list = normalizeList(payload.msgBody && payload.msgBody.itemList);
+  const filtered = list.filter(function (item) {
+    const name = String(item.rtNm || item.busRouteAbrv || '');
+    return !routeName || name.indexOf(routeName) !== -1;
+  });
+  const item = filtered[0] || list[0] || null;
+
+  return jsonOutput({ ok: true, arsId: arsId, routeName: routeName, item: item, arrmsg1: item && item.arrmsg1, arrmsg2: item && item.arrmsg2, secondsLeft: item && Number(item.exps1 || item.traTime1 || 0), raw: payload });
+}
+
+function normalizeList(value) {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+}
+
+function jsonOutput(data) {
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
 }
 ```
 
-값을 모두 넣고 `enabled`를 `true`로 바꾸면 버스 도착 정보를 요청합니다.
+### Script Properties에 키 저장
 
-### 마을버스 5분 전 알림
+1. Apps Script 왼쪽 `프로젝트 설정` 클릭
+2. Script Properties 섹션에서 속성 추가
+3. 이름: `BUS_API_KEY`
+4. 값: 공공데이터포털 Decoding 키
+5. 저장
 
-가능하지만 GitHub Pages만으로는 어렵습니다. GitHub Pages는 항상 실행되는 서버가 아니라 정적 파일 호스팅이기 때문입니다.
+### Web App 배포
 
-추천 방법:
+1. `배포 > 새 배포`
+2. 유형: 웹 앱
+3. 실행 사용자: 나
+4. 액세스 권한: 모든 사용자
+5. 배포 후 Web App URL 복사
+6. 샘플 앱의 `마을버스 프록시 설정`에 입력
 
-1. Google Apps Script
-   - 1분마다 버스 API를 조회합니다.
-   - 도착 예정 시간이 5분 이하이면 메일을 보냅니다.
-   - 수업용으로 가장 쉽습니다.
+## 06. 5분 전 알림
 
-2. Cloudflare Workers Cron
-   - 서버리스 방식으로 주기 실행합니다.
-   - 웹앱과 분리된 알림 백엔드로 적합합니다.
-
-3. Supabase Edge Function
-   - DB에 사용자별 설정을 저장하고 주기적으로 조회합니다.
-   - 실서비스 구조에 가깝습니다.
-
-4. 브라우저 알림
-   - 페이지가 열려 있을 때만 가능합니다.
-   - 앱을 닫으면 알림이 오지 않습니다.
-
-Google Apps Script 예시:
+Apps Script에 시간 기반 트리거를 추가하면 됩니다.
 
 ```js
 function checkBusAndSendMail() {
-  const email = "your-email@example.com";
-  const minutesLeft = 5;
+  const email = 'your-email@example.com';
+  const fakeEvent = { parameter: { arsId: '21347', routeName: '관악11' } };
+  const text = doGet(fakeEvent).getContent();
+  const data = JSON.parse(text);
+  const secondsLeft = Number(data.secondsLeft || 0);
 
-  if (minutesLeft <= 5) {
-    MailApp.sendEmail(email, "버스 알림", "버스가 약 5분 뒤 도착합니다.");
+  if (secondsLeft > 0 && secondsLeft <= 300) {
+    MailApp.sendEmail(email, '관악11 도착 알림', '관악11이 약 5분 이내 도착합니다: ' + data.arrmsg1);
   }
 }
 ```
 
-실제 수업에서는 `minutesLeft` 자리에 버스 API 응답에서 가져온 도착 예정 시간을 넣습니다.
+트리거는 `시간 기반`, `분 단위 타이머`, `1분마다`로 설정합니다.
 
-### NEIS 급식 API
+## 07. 급식 메뉴 투표
 
-NEIS 급식식단정보를 사용합니다.
+처음에는 `localStorage`에 저장합니다.
 
-```js
-schoolMeal: {
-  enabled: true,
-  educationOfficeCode: "B10",
-  schoolCode: "7010536",
-  schoolName: "선린인터넷고등학교",
-  mealDate: ""
-}
-```
-
-`mealDate`를 비워두면 샘플 데이터 1건을 가져옵니다. 특정 날짜를 보고 싶으면 `YYYYMMDD` 형식으로 입력합니다.
-
-## 05. 급식 메뉴 투표
-
-급식 API에서 메뉴를 가져오면 각 메뉴 옆에 투표 버튼을 보여줍니다. 처음 저장 방식은 `localStorage`입니다.
-
-### localStorage 장점
+장점:
 
 - 서버가 없어도 됩니다.
-- GitHub Pages에서 바로 작동합니다.
-- 저장 개념을 배우기 좋습니다.
+- GitHub Pages에서 바로 동작합니다.
 
-### localStorage 한계
+한계:
 
-- 같은 컴퓨터와 같은 브라우저에서만 유지됩니다.
-- 친구와 투표 결과를 공유할 수 없습니다.
-- 브라우저 데이터를 지우면 사라집니다.
+- 같은 브라우저에서만 유지됩니다.
+- 친구와 결과를 공유하려면 DB가 필요합니다.
 
-### 투표 흐름
+## 08. DB 연동
 
-1. 급식 API에서 메뉴를 가져옵니다.
-2. 메뉴별 카드를 만듭니다.
-3. 투표 버튼을 누릅니다.
-4. `localStorage`에 표 수를 저장합니다.
-5. 화면을 다시 그립니다.
-
-## 06. DB 연동
-
-여러 사람이 같은 투표 결과를 보려면 DB가 필요합니다. 초보자 수업에서는 Supabase를 추천합니다.
-
-### Supabase를 쓰는 이유
-
-- 웹 화면에서 테이블을 만들 수 있습니다.
-- JavaScript SDK가 있습니다.
-- 무료 실습이 가능합니다.
-- 나중에 로그인, 파일 업로드, 실시간 기능으로 확장할 수 있습니다.
-
-### 투표용 테이블 예시
+여러 사람이 같은 투표 결과를 보려면 Supabase 같은 DB가 필요합니다.
 
 ```sql
 create table meal_votes (
@@ -273,79 +202,11 @@ create table meal_votes (
 );
 ```
 
-### 보안 규칙
+주의: service role key, database password, secret key는 브라우저 코드에 넣지 않습니다.
 
-브라우저 코드에 넣어도 되는 키:
+## 문제 해결
 
-- publishable key
-- anon key
-
-브라우저 코드에 절대 넣으면 안 되는 키:
-
-- service role key
-- database password
-- secret key
-
-### RLS 주의
-
-Supabase는 Row Level Security 때문에 테이블을 만들어도 바로 읽기/쓰기가 안 될 수 있습니다. 정책을 만들어야 합니다.
-
-## 07. 최종 프로젝트
-
-최종 프로젝트는 다음 중 최소 2개 기능을 포함합니다.
-
-- 날씨 API
-- 마을버스 API
-- NEIS 급식 API
-- 급식 메뉴 투표
-- Google Sheets 데이터
-- Supabase DB 저장
-
-### 추천 주제
-
-- 우리 학교 생활 정보 대시보드
-- 오늘의 등교 도우미
-- 급식 인기 메뉴 투표판
-- 날씨와 버스 정보를 함께 보여주는 등교 앱
-- 학교 주변 생활 데이터 카드 앱
-
-### 제출물
-
-- GitHub 저장소 링크
-- GitHub Pages 배포 링크
-- 사용한 API 목록
-- API 키 보안 설명
-- 오류 해결 기록
-- AI에게 요청한 프롬프트 2개 이상
-
-## 부록. 문제 해결 체크리스트
-
-### 화면이 안 뜰 때
-
-- `index.html`이 있는지 확인합니다.
-- 파일 경로가 맞는지 확인합니다.
-- 브라우저 Console을 봅니다.
-
-### CSS가 안 먹을 때
-
-- `<link rel="stylesheet" href="./css/style.css">` 경로를 확인합니다.
-- 파일 이름이 `style.css`인지 확인합니다.
-
-### JS가 안 될 때
-
-- `<script>` 경로를 확인합니다.
-- Console의 빨간 오류를 읽습니다.
-- 오타, 괄호, 따옴표를 확인합니다.
-
-### API가 안 될 때
-
-- URL을 브라우저 주소창에 직접 열어봅니다.
-- 키가 필요한 API인지 확인합니다.
-- 날짜 형식이 맞는지 확인합니다.
-- CORS 오류인지 확인합니다.
-
-### 투표가 저장되지 않을 때
-
-- 브라우저가 localStorage를 막고 있지 않은지 확인합니다.
-- 시크릿 모드인지 확인합니다.
-- 같은 브라우저에서 새로고침했는지 확인합니다.
+- `NO_BUS_API_KEY`: Apps Script Script Properties에 `BUS_API_KEY`가 없습니다.
+- `SERVICE KEY IS NOT REGISTERED`: 공공데이터포털 키 승인/반영 문제이거나 다른 API 키입니다.
+- Web App URL 403: Apps Script 배포 권한이 `모든 사용자`가 아닐 수 있습니다.
+- 샘플 앱에서 버스가 안 뜸: 프록시 URL을 넣었는지, 정류소번호가 `21347`인지 확인합니다.
