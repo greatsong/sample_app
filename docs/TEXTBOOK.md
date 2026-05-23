@@ -16,6 +16,12 @@ GitHub Pages 정적 웹앱
 
 서울 버스 API 키를 GitHub Pages 코드에 넣으면 공개될 수 있고, 브라우저에서 직접 호출하면 HTTP/CORS 문제도 생길 수 있습니다. 그래서 버스 API는 Apps Script 프록시를 사용합니다.
 
+중요: Google Cloud Console에는 서울 버스 API가 없습니다. Google Cloud에서는 Apps Script, Drive, Gmail 같은 Google API만 켭니다. 서울 마을버스 도착 정보는 서울시 버스 Open API를 기준으로 확인합니다.
+
+- 공식 진입점: https://api.bus.go.kr/
+- 호출 베이스 URL: `http://ws.bus.go.kr/api/rest`
+- 이 프로젝트의 엔드포인트: `stationinfo/getStationByUid`
+
 이 방식은 Streamlit Secrets와 비슷합니다. 키는 Apps Script의 Script Properties에 저장하고, 웹앱에는 Apps Script Web App URL만 입력합니다.
 
 ## 교재 목표
@@ -97,6 +103,8 @@ weather: {
 - 정류소번호(ARS): `21347`
 - 노선명: `관악11`
 
+학생이 “버스 API가 없어요”라고 하면 Google Cloud에서 찾고 있는지 먼저 확인합니다. 서울 버스 API는 Google API가 아니라 서울시 버스 Open API입니다.
+
 ### NEIS 급식 API
 
 NEIS 급식식단정보를 사용합니다. 샘플은 당곡고등학교로 설정되어 있습니다.
@@ -117,13 +125,6 @@ NEIS 급식식단정보를 사용합니다. 샘플은 당곡고등학교로 설�
 6. 실행 사용자: 나
 7. 액세스 권한: 모든 사용자
 8. Web App URL을 샘플 앱에 입력
-
-Encoding 키와 Decoding 키:
-
-- Encoding 키: `%2F`, `%2B`, `%3D` 같은 문자가 들어갑니다.
-- Decoding 키: `/`, `+`, `=` 같은 문자가 들어갑니다.
-- 최신 프록시 코드는 둘 중 어느 쪽을 넣어도 처리합니다.
-- 수업에서는 Decoding 키를 넣는 방식으로 안내하면 덜 헷갈립니다.
 
 ## 06. 5분 전 알림
 
@@ -171,8 +172,8 @@ create table meal_votes (
 ## 문제 해결
 
 - `NO_BUS_API_KEY`: Apps Script Script Properties에 `BUS_API_KEY`가 없습니다.
-- `SERVICE KEY IS NOT REGISTERED`: 키 승인 반영이 아직 안 됐거나, 서비스가 다른 API 키일 수 있습니다.
-- Encoding 키를 넣었더니 실패: 이전 프록시 코드는 키를 이중 인코딩할 수 있습니다. `apps-script/Code.gs` 최신 코드로 바꾸세요.
-- Web App URL 403: Apps Script 배포 권한이 `모든 사용자`가 아닐 수 있습니다.
+- `SERVICE KEY IS NOT REGISTERED`: 해당 서울 버스 서비스에 승인된 키가 아니거나, 승인 반영이 아직 안 됐을 수 있습니다.
+- “버스 API가 없음”: Google Cloud에서 찾으면 안 됩니다. 서울시 버스 Open API는 https://api.bus.go.kr/ 에서 확인합니다.
+- Web App URL 403: Apps Script 배포 권한이 `모든 사용자`가 아니거나, 첫 실행 권한 승인이 아직 안 되었을 수 있습니다.
 - 샘플 앱에서 버스가 안 뜸: 프록시 URL을 넣었는지, 정류소번호가 `21347`인지 확인합니다.
 - 코드를 고쳤는데 그대로임: Apps Script는 수정 후 새 버전으로 다시 배포해야 합니다.
