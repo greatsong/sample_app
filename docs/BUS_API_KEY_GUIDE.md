@@ -6,6 +6,12 @@
 
 https://www.data.go.kr/data/15000314/openapi.do
 
+## 중요한 보안 안내
+
+API 키를 GitHub 공개 저장소에 그대로 올리면 안 됩니다. 이 샘플 앱은 키를 코드에 저장하지 않고, 배포 페이지의 `마을버스 설정` 입력란에 넣으면 현재 브라우저의 `localStorage`에만 저장합니다.
+
+이미 공개 채팅이나 공개 저장소에 키를 붙여넣었다면 가능하면 공공데이터포털에서 키를 재발급하세요.
+
 ## 발급 절차
 
 1. https://www.data.go.kr 에 접속합니다.
@@ -14,20 +20,24 @@ https://www.data.go.kr/data/15000314/openapi.do
 4. 데이터 상세 페이지에서 `활용신청`을 누릅니다.
 5. 활용 목적은 수업/학습용으로 작성합니다.
 6. 신청이 승인되면 `마이페이지 > 오픈API > 개발계정` 또는 해당 API 상세 페이지에서 인증키를 확인합니다.
-7. 일반 인증키 또는 디코딩 인증키 중 API 호출에서 정상 동작하는 값을 사용합니다.
 
-## 앱 설정 위치
+## 앱에서 입력하기
 
-`js/config.js`에서 아래 값을 채웁니다.
+배포 페이지로 갑니다.
 
-```js
-villageBus: {
-  enabled: true,
-  serviceKey: "발급받은_인증키",
-  stationId: "정류소_ID",
-  busRouteId: "노선_ID"
-}
-```
+https://greatsong.github.io/sample_app/
+
+오른쪽 `마을버스 설정`에 아래 값을 입력합니다.
+
+- Decoding 인증키: 공공데이터포털의 `일반 인증키 (Decoding)` 값
+- 정류소 ID: API가 요구하는 정류소 고유 ID
+- 노선 ID: 버스 노선 ID
+
+입력 후 `저장하고 조회`를 누릅니다.
+
+## 왜 Decoding 키를 넣나요?
+
+앱은 `URLSearchParams`로 요청 URL을 만들기 때문에 특수문자를 자동으로 인코딩합니다. 그래서 입력칸에는 보통 Decoding 키를 넣는 편이 안전합니다.
 
 ## 필요한 ID
 
@@ -71,9 +81,3 @@ if (minutesLeft <= 5) {
 - 사용자의 정류장/노선/희망 시간을 DB에 저장합니다.
 - 주기적으로 API를 조회합니다.
 - Resend, SendGrid, Gmail API, Slack webhook 등으로 알림을 보냅니다.
-
-## 주의
-
-- API 키를 GitHub 공개 저장소에 그대로 올리면 안 됩니다.
-- GitHub Pages만으로는 페이지를 닫은 뒤에도 계속 확인하는 알림을 만들 수 없습니다.
-- 정확히 5분 전을 보장하려면 1분 단위 이상으로 주기 실행하는 백엔드가 필요합니다.
