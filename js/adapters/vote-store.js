@@ -1,0 +1,1 @@
+window.VoteStore={getVotes(storageKey){const saved=window.localStorage.getItem(storageKey);return saved?JSON.parse(saved):{}},addVote(storageKey,menuName){const votes=this.getVotes(storageKey);votes[menuName]=(votes[menuName]||0)+1;window.localStorage.setItem(storageKey,JSON.stringify(votes));return votes}};
