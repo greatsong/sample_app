@@ -8,7 +8,9 @@ https://greatsong.github.io/sample_app/
 
 ## 완성 교재
 
-- [생활 데이터 웹앱 만들기](docs/TEXTBOOK.md)
+- HTML 교재: https://greatsong.github.io/sample_app/textbook.html
+- Markdown 교재: [생활 데이터 웹앱 만들기](docs/TEXTBOOK.md)
+- 버스 API 키 발급 가이드: [BUS_API_KEY_GUIDE.md](docs/BUS_API_KEY_GUIDE.md)
 
 ## 챕터
 
