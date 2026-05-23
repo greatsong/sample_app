@@ -18,6 +18,25 @@ function doGet(e) {
   }
 }
 
+function setupBusProperties(config) {
+  const props = PropertiesService.getScriptProperties();
+  const values = config || {};
+
+  if (values.busApiKey) props.setProperty('BUS_API_KEY', values.busApiKey);
+  if (values.alertEmail) props.setProperty('BUS_ALERT_EMAIL', values.alertEmail);
+  if (values.arsId) props.setProperty('BUS_ALERT_ARS_ID', values.arsId);
+  if (values.routeName) props.setProperty('BUS_ALERT_ROUTE_NAME', values.routeName);
+  if (values.cooldownMinutes) props.setProperty('BUS_ALERT_COOLDOWN_MINUTES', String(values.cooldownMinutes));
+
+  return {
+    ok: true,
+    hasBusApiKey: Boolean(props.getProperty('BUS_API_KEY')),
+    alertEmail: props.getProperty('BUS_ALERT_EMAIL') || '',
+    arsId: props.getProperty('BUS_ALERT_ARS_ID') || DEFAULT_ARS_ID,
+    routeName: props.getProperty('BUS_ALERT_ROUTE_NAME') || DEFAULT_ROUTE_NAME
+  };
+}
+
 function fetchBusArrival(arsId, routeName) {
   const props = PropertiesService.getScriptProperties();
   const serviceKey = props.getProperty('BUS_API_KEY');
