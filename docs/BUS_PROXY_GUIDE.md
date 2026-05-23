@@ -1,8 +1,8 @@
 # Google Apps Script 버스 프록시 만들기
 
-GitHub Pages는 정적 파일 호스팅이라 서울 버스 API 키를 안전하게 숨길 수 없습니다. 그래서 버스 API 키는 Google Apps Script의 Script Properties에 저장하고, GitHub Pages는 Apps Script Web App URL만 호출합니다.
+GitHub Pages는 정적 파일 호스팅이라 서울 버스 API 키를 안전하게 숨길 수 없습니다. 브라우저에서 서울 버스 API를 직접 호출하면 HTTP/CORS 문제도 생길 수 있습니다.
 
-## 구조
+그래서 이 프로젝트는 아래 구조를 사용합니다.
 
 ```text
 GitHub Pages 샘플 앱
@@ -12,69 +12,23 @@ GitHub Pages 샘플 앱
       -> JSON 결과 반환
 ```
 
+## 완성 코드 위치
+
+리포에 Apps Script 원본을 따로 넣어 두었습니다.
+
+- `apps-script/Code.gs`
+- `apps-script/appsscript.json`
+
+Apps Script 화면에서 `Code.gs`에는 `apps-script/Code.gs` 내용을 붙여넣으면 됩니다.
+
 ## 1. Apps Script 만들기
 
 1. https://script.google.com 접속
 2. `새 프로젝트` 클릭
 3. 프로젝트 이름을 `bus-arrival-proxy`처럼 변경
-4. `Code.gs`에 아래 코드를 붙여넣기
-
-```js
-const BUS_API_BASE = 'http://ws.bus.go.kr/api/rest/stationinfo/getStationByUid';
-
-function doGet(e) {
-  const props = PropertiesService.getScriptProperties();
-  const serviceKey = props.getProperty('BUS_API_KEY');
-  const arsId = e.parameter.arsId || '21347';
-  const routeName = e.parameter.routeName || '관악11';
-
-  if (!serviceKey) {
-    return jsonOutput({ error: 'NO_BUS_API_KEY', message: 'Script Properties에 BUS_API_KEY가 없습니다.' });
-  }
-
-  const url = BUS_API_BASE
-    + '?serviceKey=' + encodeURIComponent(serviceKey)
-    + '&arsId=' + encodeURIComponent(arsId)
-    + '&resultType=json';
-
-  const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
-  const payload = JSON.parse(response.getContentText());
-  const header = payload.msgHeader || {};
-
-  if (header.headerCd && header.headerCd !== '0') {
-    return jsonOutput({ error: 'BUS_API_ERROR', message: header.headerMsg, raw: payload });
-  }
-
-  const list = normalizeList(payload.msgBody && payload.msgBody.itemList);
-  const filtered = list.filter(function (item) {
-    const name = String(item.rtNm || item.busRouteAbrv || '');
-    return !routeName || name.indexOf(routeName) !== -1;
-  });
-  const item = filtered[0] || list[0] || null;
-
-  return jsonOutput({
-    ok: true,
-    arsId: arsId,
-    routeName: routeName,
-    item: item,
-    arrmsg1: item && item.arrmsg1,
-    arrmsg2: item && item.arrmsg2,
-    secondsLeft: item && Number(item.exps1 || item.traTime1 || 0),
-    raw: payload
-  });
-}
-
-function normalizeList(value) {
-  if (!value) return [];
-  return Array.isArray(value) ? value : [value];
-}
-
-function jsonOutput(data) {
-  return ContentService
-    .createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-```
+4. `Code.gs` 파일을 열기
+5. GitHub 리포의 `apps-script/Code.gs` 내용을 전체 복사해서 붙여넣기
+6. 저장
 
 ## 2. 키를 Script Properties에 저장
 
@@ -82,10 +36,19 @@ function jsonOutput(data) {
 2. `스크립트 속성` 또는 `Script Properties` 섹션 찾기
 3. `속성 추가` 클릭
 4. 속성 이름: `BUS_API_KEY`
-5. 값: 공공데이터포털 `일반 인증키 (Decoding)` 값
+5. 값: 공공데이터포털 버스 API 인증키
 6. 저장
 
-이 값은 GitHub 저장소에 올라가지 않습니다.
+### Encoding 키와 Decoding 키
+
+공공데이터포털은 보통 두 가지 키를 보여줍니다.
+
+- `Encoding`: `%2F`, `%2B`, `%3D` 같은 문자가 들어간 값
+- `Decoding`: `/`, `+`, `=` 같은 문자가 들어간 값
+
+이번 프록시 코드는 둘 중 어느 쪽을 넣어도 동작하도록 처리했습니다. 그래도 수업에서는 `Decoding` 키를 넣는 방식으로 설명하는 것이 덜 헷갈립니다.
+
+주의: API 키는 GitHub, Slack, 교재 화면에 다시 붙여넣지 않는 것이 좋습니다.
 
 ## 3. Web App으로 배포
 
@@ -120,21 +83,14 @@ https://greatsong.github.io/sample_app/
 
 ## 5. 5분 전 메일 알림으로 확장
 
-Apps Script에 시간 기반 트리거를 추가하면 1분마다 버스 도착 정보를 확인하고 메일을 보낼 수 있습니다.
+`apps-script/Code.gs`에는 `checkBusAndSendMail` 함수도 들어 있습니다.
 
-```js
-function checkBusAndSendMail() {
-  const email = 'your-email@example.com';
-  const fakeEvent = { parameter: { arsId: '21347', routeName: '관악11' } };
-  const text = doGet(fakeEvent).getContent();
-  const data = JSON.parse(text);
-  const secondsLeft = Number(data.secondsLeft || 0);
+메일 알림을 쓰려면 Script Properties에 아래 값을 추가합니다.
 
-  if (secondsLeft > 0 && secondsLeft <= 300) {
-    MailApp.sendEmail(email, '관악11 도착 알림', '관악11이 약 5분 이내 도착합니다: ' + data.arrmsg1);
-  }
-}
-```
+- `BUS_ALERT_EMAIL`: 알림 받을 이메일
+- `BUS_ALERT_ARS_ID`: `21347`
+- `BUS_ALERT_ROUTE_NAME`: `관악11`
+- `BUS_ALERT_COOLDOWN_MINUTES`: `10`
 
 트리거 설정:
 
@@ -145,9 +101,13 @@ function checkBusAndSendMail() {
 5. 유형: `분 단위 타이머`
 6. 간격: `1분마다`
 
+같은 버스가 계속 5분 이내로 잡힐 때 메일이 반복 발송되지 않도록 기본 10분 쿨다운을 넣었습니다.
+
 ## 자주 나는 오류
 
 - `NO_BUS_API_KEY`: Script Properties에 `BUS_API_KEY`가 없습니다.
-- `SERVICE KEY IS NOT REGISTERED`: 공공데이터포털 키 승인/반영이 안 되었거나 다른 API 키입니다.
+- `SERVICE KEY IS NOT REGISTERED`: 키 승인 반영이 아직 안 됐거나, 서비스가 다른 API 키일 수 있습니다.
+- Encoding 키를 넣었더니 실패: 최신 코드는 자동 처리하지만, 이전 코드를 쓰고 있으면 키가 이중 인코딩될 수 있습니다. `apps-script/Code.gs` 최신 코드로 바꾸세요.
 - Web App URL이 403: 배포 권한이 `모든 사용자`가 아닐 수 있습니다.
-- 앱에서 CORS 오류: Apps Script 응답이 아니라 서울 버스 API를 직접 호출하고 있는지 확인합니다.
+- 앱에서 CORS 오류: GitHub Pages가 서울 버스 API를 직접 호출하고 있는지 확인하세요. 앱에는 Apps Script Web App URL만 넣어야 합니다.
+- 수정했는데 반영 안 됨: Apps Script는 코드를 바꾼 뒤 `배포 > 배포 관리 > 새 버전`으로 다시 배포해야 합니다.
