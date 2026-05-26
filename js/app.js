@@ -29,7 +29,7 @@ function getRuntimeConfig() {
   const saved = getSavedBusSettings();
   const config = structuredClone(window.APP_CONFIG);
   const baseBus = config.villageBus || {};
-  const proxyUrl = saved.proxyUrl ?? baseBus.proxyUrl ?? "";
+  const proxyUrl = saved.proxyUrl || baseBus.proxyUrl || "";
   const arsId = saved.arsId || baseBus.arsId || DEFAULT_BUS.arsId;
   const routeName = saved.routeName || baseBus.routeName || DEFAULT_BUS.routeName;
 
@@ -47,7 +47,7 @@ function getRuntimeConfig() {
 function loadBusSettingsForm() {
   const saved = getSavedBusSettings();
   const baseBus = window.APP_CONFIG.villageBus || {};
-  elements.busServiceKey.value = saved.proxyUrl ?? baseBus.proxyUrl ?? "";
+  elements.busServiceKey.value = saved.proxyUrl || baseBus.proxyUrl || "";
   elements.busStationId.value = saved.arsId || baseBus.arsId || DEFAULT_BUS.arsId;
   elements.busRouteId.value = saved.routeName || baseBus.routeName || DEFAULT_BUS.routeName;
 }
