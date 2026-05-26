@@ -29,7 +29,8 @@
         <a href="#lesson3">3. 급식 API</a>
         <a href="#lesson4">4. 투표 저장</a>
         <a href="#lesson5">5. 버스 API</a>
-        <a href="#lesson6">6. 메일 알림</a>
+        <a href="#lesson6">6. 내 앱으로 바꾸기</a>
+        <a href="#teacher-extension">교사용 확장</a>
         <a href="#trouble">오류 해결</a>
       </nav>
 
@@ -151,8 +152,39 @@
         </section>
 
         <section class="lesson" id="lesson6">
-          <h2>6. 도착 5분 전 메일 알림 만들기</h2>
-          <div class="meta"><span class="pill">확장</span><span class="pill">트리거</span><span class="pill">메일</span></div>
+          <h2>6. 나만의 학교와 정류소로 바꾸기</h2>
+          <div class="meta"><span class="pill">30분</span><span class="pill">개인화</span><span class="pill">최종 점검</span></div>
+          <p>마지막 본문 실습은 완성본을 내 생활권 앱으로 바꾸는 단계입니다. 한 번에 전부 고치지 않고 날씨, 급식, 버스를 하나씩 바꾼 뒤 화면을 확인합니다.</p>
+          <h3>바꿀 설정값</h3>
+          <div class="flow">
+            <div>날씨: label, latitude, longitude</div>
+            <div>급식: educationOfficeCode, schoolCode, schoolName, mealCode, mealDate</div>
+            <div>버스: proxyUrl, arsId, routeName</div>
+          </div>
+          <h3>실습 순서</h3>
+          <ol>
+            <li>현재 샘플 앱이 정상 작동하는지 확인합니다.</li>
+            <li>`js/config.js`의 원래 값을 메모합니다.</li>
+            <li>날씨 지역만 바꾸고 새로고침합니다.</li>
+            <li>학교 급식 설정만 바꾸고 새로고침합니다.</li>
+            <li>정류소번호와 노선명만 바꾸고 새로고침합니다.</li>
+            <li>급식 투표가 Google Sheets에 저장되는지 확인합니다.</li>
+            <li>GitHub Pages 주소에서 같은 화면이 열리는지 확인합니다.</li>
+          </ol>
+          <div class="checklist">
+            <label><input type="checkbox"> 날씨 지역 이름이 바뀌었다.</label>
+            <label><input type="checkbox"> 급식 학교 이름이 바뀌었다.</label>
+            <label><input type="checkbox"> 버스 정류소번호와 노선명이 바뀌었다.</label>
+            <label><input type="checkbox"> 투표 데이터가 Google Sheets에 저장된다.</label>
+            <label><input type="checkbox"> GitHub Pages 주소에서 앱이 열린다.</label>
+          </div>
+          <div class="warning"><strong>주의</strong><p>세 기능을 한 번에 바꾸면 어디서 오류가 났는지 찾기 어렵습니다. 하나를 바꾸고 저장, 새로고침, 확인까지 끝낸 뒤 다음 기능으로 넘어갑니다.</p></div>
+        </section>
+
+        <section class="lesson" id="teacher-extension">
+          <h2>교사용 확장. 도착 5분 전 메일 알림</h2>
+          <div class="meta"><span class="pill">확장</span><span class="pill">트리거</span><span class="pill">교사용</span></div>
+          <p>메일 알림은 학생 본문이 아니라 교사용 운영 또는 확장 활동입니다. 권한 승인, 시간 기반 트리거, 이메일 발송이 들어가므로 본문 실습 흐름과 분리합니다.</p>
           <p>GitHub Pages는 1분마다 혼자 실행될 수 없습니다. 그래서 Apps Script의 시간 기반 트리거를 사용합니다.</p>
           <h3>Script Properties</h3>
           <ul>
@@ -168,7 +200,7 @@
             <li>이벤트 소스는 시간 기반으로 고릅니다.</li>
             <li>분 단위 타이머, 1분마다 실행으로 설정합니다.</li>
           </ol>
-          <div class="teacher"><strong>교사용 메모</strong><p>메일 주소와 몇 분 전 알림 설정은 GitHub Pages 화면에서 입력받을 수 있지만, 아무나 바꾸면 안 됩니다. 관리자 PIN 같은 보호 장치를 붙인 뒤 Apps Script가 설정을 저장하는 구조가 안전합니다.</p></div>
+          <div class="teacher"><strong>교사용 메모</strong><p>메일 주소와 몇 분 전 알림 설정을 공개 화면에서 아무나 바꾸게 하면 안 됩니다. 필요하면 관리자 PIN 같은 보호 장치를 붙인 뒤 Apps Script가 설정을 저장하는 구조로 확장합니다.</p></div>
         </section>
 
         <section class="lesson" id="trouble">
