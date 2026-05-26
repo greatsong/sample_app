@@ -3,149 +3,215 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>생활 데이터 웹앱 만들기 교재</title>
+    <title>생활 데이터 웹앱 만들기 웹 교재</title>
     <link rel="stylesheet" href="./css/style.css">
     <style>
-      .textbook{width:min(960px,calc(100% - 32px));margin:32px auto 64px}
-      .textbook article{display:grid;gap:18px}
-      .textbook h2{margin:26px 0 4px;font-size:1.55rem}
-      .textbook h3{margin:18px 0 2px;font-size:1.18rem}
-      .textbook p{margin:0;line-height:1.78}
-      .textbook ul,.textbook ol{margin:0;padding-left:22px;line-height:1.75}
-      .textbook li{margin:4px 0}
-      .textbook pre{overflow:auto;border:1px solid var(--line);border-radius:8px;padding:14px;background:#fbfcfb;line-height:1.55}
-      .textbook code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-      .textbook a{color:var(--accent-dark);font-weight:700}
-      .top-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
-      .top-links a{border-radius:6px;padding:10px 12px;background:white;color:var(--accent-dark);text-decoration:none;font-weight:800}
+      :root{--lesson-bg:#fffdf8;--note:#fff7df;--practice:#eaf7f4;--warn:#fff0f0}
+      body{background:#f7f4ef}.book-hero{min-height:360px}.book-wrap{width:min(1120px,calc(100% - 32px));margin:24px auto 72px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:20px}.book-nav{position:sticky;top:16px;align-self:start;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:14px}.book-nav strong{display:block;margin-bottom:10px}.book-nav a{display:block;border-radius:6px;padding:9px 10px;color:var(--text);text-decoration:none;font-weight:700}.book-nav a:hover{background:#e7f5f2;color:var(--accent-dark)}.book-main{display:grid;gap:18px}.lesson{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:24px}.lesson h2{margin:0 0 8px;font-size:1.45rem}.lesson h3{margin:20px 0 8px;font-size:1.08rem}.lesson p{margin:0 0 12px;line-height:1.75}.lesson ul,.lesson ol{margin:0 0 12px;padding-left:22px;line-height:1.7}.lesson li{margin:4px 0}.meta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.pill{display:inline-flex;align-items:center;border-radius:999px;padding:5px 10px;background:#e7f5f2;color:var(--accent-dark);font-size:.86rem;font-weight:800}.goal{border-left:4px solid var(--accent);background:var(--practice);padding:14px;border-radius:6px;margin:14px 0}.teacher{border-left:4px solid #d99b28;background:var(--note);padding:14px;border-radius:6px;margin:14px 0}.warning{border-left:4px solid #d64b4b;background:var(--warn);padding:14px;border-radius:6px;margin:14px 0}.checklist{display:grid;gap:8px;margin:10px 0}.checklist label{display:flex;gap:8px;align-items:flex-start}.code{overflow:auto;border:1px solid var(--line);border-radius:8px;background:#fbfcfb;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.55;white-space:pre}.flow{display:grid;gap:8px;margin:12px 0}.flow div{border:1px solid var(--line);border-radius:8px;background:#fbfcfb;padding:12px;font-weight:700}.top-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}.top-links a{border-radius:6px;padding:10px 12px;background:white;color:var(--accent-dark);text-decoration:none;font-weight:800}.small{color:var(--muted);font-size:.94rem}@media(max-width:860px){.book-wrap{grid-template-columns:1fr}.book-nav{position:static}.book-nav a{display:inline-block}.lesson{padding:18px}.book-hero{min-height:420px}}
     </style>
   </head>
   <body>
-    <header class="app-header">
+    <header class="app-header book-hero">
       <div>
-        <p class="eyebrow">Complete Textbook</p>
+        <p class="eyebrow">Web Textbook · Beginner First</p>
         <h1>생활 데이터 웹앱 만들기</h1>
-        <p class="lead">GitHub Pages, 바이브 코딩, Google Sheets, 날씨, 마을버스, NEIS 급식, 투표, DB 연동까지 이어지는 왕초보용 상세 교재입니다.</p>
-        <div class="top-links"><a href="./">샘플 앱</a><a href="./docs/TEXTBOOK.md">Markdown 교재</a><a href="./docs/BUS_API_KEY_GUIDE.md">버스 키 발급 가이드</a></div>
+        <p class="lead">날씨, 오늘/내일 급식, 마을버스 도착 정보, 급식 투표 저장까지 하나씩 완성하는 웹 교재입니다. Markdown 문서는 참고 자료이고, 수업 진행은 이 페이지를 기준으로 합니다.</p>
+        <div class="top-links"><a href="./">샘플 앱 열기</a><a href="./docs/TEXTBOOK.md">Markdown 원문</a><a href="./docs/BUS_PROXY_GUIDE.md">버스 프록시 가이드</a></div>
       </div>
     </header>
-    <main class="textbook">
-      <article id="textbookContent" class="panel">
-        <p>교재를 불러오는 중입니다.</p>
-      </article>
-    </main>
-    <script>
-      const content = document.querySelector("#textbookContent");
 
-      fetch("./docs/TEXTBOOK.md")
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("교재 파일을 불러오지 못했습니다.");
-          }
-          return response.text();
-        })
-        .then((markdown) => {
-          content.innerHTML = renderMarkdown(markdown);
-        })
-        .catch((error) => {
-          content.innerHTML = `<p>${escapeHtml(error.message)}</p><p><a href="./docs/TEXTBOOK.md">Markdown 교재를 직접 열기</a></p>`;
-        });
+    <div class="book-wrap">
+      <nav class="book-nav" aria-label="교재 목차">
+        <strong>수업 목차</strong>
+        <a href="#lesson0">0. 완성본 체험</a>
+        <a href="#lesson1">1. 파일 구조</a>
+        <a href="#lesson2">2. 날씨 API</a>
+        <a href="#lesson3">3. 급식 API</a>
+        <a href="#lesson4">4. 투표 저장</a>
+        <a href="#lesson5">5. 버스 API</a>
+        <a href="#lesson6">6. 내 앱으로 바꾸기</a>
+        <a href="#teacher-extension">교사용 확장</a>
+        <a href="#trouble">오류 해결</a>
+      </nav>
 
-      function renderMarkdown(markdown) {
-        const lines = markdown.split("\n");
-        const html = [];
-        let listType = null;
-        let inCode = false;
-        let codeLines = [];
+      <main class="book-main">
+        <section class="lesson" id="lesson0">
+          <h2>0. 완성본 먼저 체험하기</h2>
+          <div class="meta"><span class="pill">10분</span><span class="pill">관찰</span><span class="pill">코드 수정 없음</span></div>
+          <p>초보자 수업은 완성된 화면을 먼저 보고 시작합니다. 학생이 오늘 무엇을 만들지 모르면 코드 설명이 전부 낯선 단어가 됩니다.</p>
+          <div class="goal">
+            <strong>이번 목표</strong>
+            <p>샘플 앱을 열고 날씨, 급식, 버스, 투표 영역이 어떤 역할을 하는지 말로 설명합니다.</p>
+          </div>
+          <ol>
+            <li><a href="./">샘플 앱</a>을 엽니다.</li>
+            <li>날씨 카드에서 온도, 습도, 바람 정보를 찾습니다.</li>
+            <li>급식 카드에서 오늘과 내일 메뉴가 나뉘어 보이는지 확인합니다.</li>
+            <li>버스 카드에서 관악11 도착 문구를 확인합니다.</li>
+            <li>투표 버튼을 누르면 어떤 저장소가 필요할지 예상해 봅니다.</li>
+          </ol>
+          <div class="checklist">
+            <label><input type="checkbox"> 화면의 네 영역을 설명할 수 있다.</label>
+            <label><input type="checkbox"> API가 외부 데이터를 가져오는 통로라는 말을 이해했다.</label>
+            <label><input type="checkbox"> 비밀키는 웹페이지에 넣으면 안 된다는 점을 알았다.</label>
+          </div>
+          <div class="teacher"><strong>교사용 메모</strong><p>처음부터 Apps Script나 CORS를 설명하지 않습니다. 먼저 “화면에 보이는 데이터가 어디서 왔을까?”를 묻고, 학생의 답을 들은 뒤 API 개념으로 연결합니다.</p></div>
+        </section>
 
-        for (const line of lines) {
-          if (line.startsWith("```")) {
-            if (inCode) {
-              html.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
-              codeLines = [];
-              inCode = false;
-            } else {
-              closeList();
-              inCode = true;
-            }
-            continue;
-          }
+        <section class="lesson" id="lesson1">
+          <h2>1. 파일 구조 이해하기</h2>
+          <div class="meta"><span class="pill">15분</span><span class="pill">코드 읽기</span></div>
+          <p>이 프로젝트는 많은 기능이 있지만 파일 역할은 단순하게 나눌 수 있습니다.</p>
+          <div class="flow">
+            <div>index.html: 화면의 뼈대</div>
+            <div>css/style.css: 색상과 배치</div>
+            <div>js/config.js: 학교, 정류소, 프록시 주소 같은 설정</div>
+            <div>js/adapters/api-services.js: 날씨·급식·버스 API 호출</div>
+            <div>js/app.js: 버튼 클릭, 카드 그리기, 투표 처리</div>
+            <div>apps-script/Code.gs: 버스 키 숨기기, 메일 알림, 투표 저장 대행</div>
+          </div>
+          <h3>학생 활동</h3>
+          <ol>
+            <li>GitHub에서 각 파일을 하나씩 엽니다.</li>
+            <li>파일 이름 옆에 “화면”, “디자인”, “설정”, “동작”, “서버 역할” 중 하나를 적습니다.</li>
+            <li>앱에서 보이는 문구 하나를 골라 어느 파일에 있는지 찾아봅니다.</li>
+          </ol>
+          <div class="warning"><strong>주의</strong><p>초보자에게 전체 코드를 한 번에 설명하지 않습니다. “오늘 고칠 파일 하나”를 정하고 그 파일만 집중해서 봅니다.</p></div>
+        </section>
 
-          if (inCode) {
-            codeLines.push(line);
-            continue;
-          }
+        <section class="lesson" id="lesson2">
+          <h2>2. 날씨 API 붙이기</h2>
+          <div class="meta"><span class="pill">20분</span><span class="pill">공개 API</span><span class="pill">키 없음</span></div>
+          <p>Open-Meteo는 API 키 없이 현재 날씨를 가져올 수 있습니다. 첫 API 실습은 키가 없는 API로 시작해야 실패 지점이 줄어듭니다.</p>
+          <div class="code">weather: {
+  enabled: true,
+  label: "서울",
+  latitude: 37.5665,
+  longitude: 126.9780
+}</div>
+          <h3>확인 질문</h3>
+          <ul>
+            <li>서울의 위도와 경도는 어디에 적혀 있나요?</li>
+            <li>날씨 카드에 표시되는 값은 API 응답 중 어떤 필드일까요?</li>
+            <li>API 키가 없는 API와 키가 필요한 API는 무엇이 다를까요?</li>
+          </ul>
+          <div class="teacher"><strong>교사용 메모</strong><p>날씨는 “성공 경험”입니다. 여기서 API 호출, JSON, 화면 표시의 기본 감각을 잡고 급식·버스로 넘어갑니다.</p></div>
+        </section>
 
-          if (!line.trim()) {
-            closeList();
-            continue;
-          }
+        <section class="lesson" id="lesson3">
+          <h2>3. 오늘과 내일 급식 표시하기</h2>
+          <div class="meta"><span class="pill">25분</span><span class="pill">NEIS</span><span class="pill">날짜 처리</span></div>
+          <p>급식은 학생에게 익숙한 데이터입니다. 이 수업에서는 “가장 가까운 급식일”이 아니라 “오늘과 내일”을 고정으로 보여줍니다. 그래야 날짜가 틀린 것처럼 보이는 문제를 줄일 수 있습니다.</p>
+          <div class="code">schoolMeal: {
+  educationOfficeCode: "B10",
+  schoolCode: "7010073",
+  schoolName: "당곡고등학교",
+  mealCode: "2",
+  mealDate: ""
+}</div>
+          <h3>실습</h3>
+          <ol>
+            <li>샘플 앱에서 오늘과 내일 급식 제목을 찾습니다.</li>
+            <li>중식 메뉴가 몇 개인지 세어 봅니다.</li>
+            <li>코드에서 `mealCode: "2"`가 중식을 뜻한다는 점을 표시합니다.</li>
+            <li>`mealDate`가 비어 있으면 오늘과 내일을 자동 계산한다는 점을 확인합니다.</li>
+          </ol>
+          <div class="checklist"><label><input type="checkbox"> 오늘 급식과 내일 급식이 분리되어 보인다.</label><label><input type="checkbox"> 학교 코드와 교육청 코드가 설정값이라는 점을 이해했다.</label></div>
+        </section>
 
-          if (line.startsWith("# ")) {
-            closeList();
-            html.push(`<h2>${inline(line.slice(2))}</h2>`);
-            continue;
-          }
+        <section class="lesson" id="lesson4">
+          <h2>4. 급식 투표를 Google Sheets에 저장하기</h2>
+          <div class="meta"><span class="pill">35분</span><span class="pill">저장</span><span class="pill">교사용 준비 필요</span></div>
+          <p>브라우저 저장소는 내 컴퓨터에만 저장됩니다. 친구들과 같은 투표 결과를 보려면 공용 저장소가 필요합니다. 이 교재에서는 초보자가 눈으로 확인하기 쉬운 Google Sheets를 사용합니다.</p>
+          <div class="flow"><div>투표 버튼 클릭</div><div>Apps Script Web App으로 전송</div><div>Google Sheets의 meal_votes 탭에 한 줄 추가</div><div>voteKey별로 표 수 계산</div><div>웹앱에 다시 표시</div></div>
+          <h3>시트에 저장되는 열</h3>
+          <div class="code">createdAt | mealDate | mealTitle | menuName | voteKey | userAgent</div>
+          <p class="small">`voteKey`는 `20260526:칼슘강화기장밥`처럼 날짜와 메뉴를 합친 값입니다. 같은 메뉴라도 날짜가 다르면 다른 투표로 계산합니다.</p>
+          <div class="teacher"><strong>교사용 준비</strong><p>Google Sheets 쓰기는 Apps Script 권한 승인이 필요합니다. `MEAL_VOTE_SHEET_ID`를 Script Properties에 넣고, 새 배포 버전에서 Sheets 권한을 승인해야 합니다. 승인 전에는 기존 버스 프록시가 멈추지 않도록 배포 버전을 바꾸지 않습니다.</p></div>
+        </section>
 
-          if (line.startsWith("## ")) {
-            closeList();
-            html.push(`<h2>${inline(line.slice(3))}</h2>`);
-            continue;
-          }
+        <section class="lesson" id="lesson5">
+          <h2>5. 마을버스 도착 정보 붙이기</h2>
+          <div class="meta"><span class="pill">30분</span><span class="pill">비밀키</span><span class="pill">Apps Script</span></div>
+          <p>서울 버스 API 키는 GitHub Pages 코드에 넣지 않습니다. GitHub Pages는 공개 웹사이트라서 키가 노출될 수 있습니다. 그래서 Apps Script가 중간 서버 역할을 합니다.</p>
+          <div class="flow"><div>GitHub Pages 웹앱</div><div>Apps Script Web App URL</div><div>Script Properties의 BUS_API_KEY</div><div>서울 버스 API</div><div>도착 정보 JSON 반환</div></div>
+          <h3>설정값</h3>
+          <div class="code">villageBus: {
+  enabled: true,
+  proxyUrl: "https://script.google.com/macros/s/.../exec",
+  arsId: "21347",
+  routeName: "관악11"
+}</div>
+          <h3>학생 확인</h3>
+          <ul>
+            <li>`arsId`는 정류소번호입니다.</li>
+            <li>`routeName`은 찾을 버스 노선명입니다.</li>
+            <li>`proxyUrl`은 Apps Script 배포 주소입니다.</li>
+          </ul>
+          <div class="warning"><strong>헷갈리는 지점</strong><p>서울 버스 API는 Google Cloud에서 찾는 API가 아닙니다. Google Cloud는 Apps Script 같은 Google API를 관리하는 곳이고, 버스 정보는 서울시 버스 Open API에서 확인합니다.</p></div>
+        </section>
 
-          if (line.startsWith("### ")) {
-            closeList();
-            html.push(`<h3>${inline(line.slice(4))}</h3>`);
-            continue;
-          }
+        <section class="lesson" id="lesson6">
+          <h2>6. 나만의 학교와 정류소로 바꾸기</h2>
+          <div class="meta"><span class="pill">30분</span><span class="pill">개인화</span><span class="pill">최종 점검</span></div>
+          <p>마지막 본문 실습은 완성본을 내 생활권 앱으로 바꾸는 단계입니다. 한 번에 전부 고치지 않고 날씨, 급식, 버스를 하나씩 바꾼 뒤 화면을 확인합니다.</p>
+          <h3>바꿀 설정값</h3>
+          <div class="flow">
+            <div>날씨: label, latitude, longitude</div>
+            <div>급식: educationOfficeCode, schoolCode, schoolName, mealCode, mealDate</div>
+            <div>버스: proxyUrl, arsId, routeName</div>
+          </div>
+          <h3>실습 순서</h3>
+          <ol>
+            <li>현재 샘플 앱이 정상 작동하는지 확인합니다.</li>
+            <li>`js/config.js`의 원래 값을 메모합니다.</li>
+            <li>날씨 지역만 바꾸고 새로고침합니다.</li>
+            <li>학교 급식 설정만 바꾸고 새로고침합니다.</li>
+            <li>정류소번호와 노선명만 바꾸고 새로고침합니다.</li>
+            <li>급식 투표가 Google Sheets에 저장되는지 확인합니다.</li>
+            <li>GitHub Pages 주소에서 같은 화면이 열리는지 확인합니다.</li>
+          </ol>
+          <div class="checklist">
+            <label><input type="checkbox"> 날씨 지역 이름이 바뀌었다.</label>
+            <label><input type="checkbox"> 급식 학교 이름이 바뀌었다.</label>
+            <label><input type="checkbox"> 버스 정류소번호와 노선명이 바뀌었다.</label>
+            <label><input type="checkbox"> 투표 데이터가 Google Sheets에 저장된다.</label>
+            <label><input type="checkbox"> GitHub Pages 주소에서 앱이 열린다.</label>
+          </div>
+          <div class="warning"><strong>주의</strong><p>세 기능을 한 번에 바꾸면 어디서 오류가 났는지 찾기 어렵습니다. 하나를 바꾸고 저장, 새로고침, 확인까지 끝낸 뒤 다음 기능으로 넘어갑니다.</p></div>
+        </section>
 
-          if (line.startsWith("- ")) {
-            openList("ul");
-            html.push(`<li>${inline(line.slice(2))}</li>`);
-            continue;
-          }
+        <section class="lesson" id="teacher-extension">
+          <h2>교사용 확장. 도착 5분 전 메일 알림</h2>
+          <div class="meta"><span class="pill">확장</span><span class="pill">트리거</span><span class="pill">교사용</span></div>
+          <p>메일 알림은 학생 본문이 아니라 교사용 운영 또는 확장 활동입니다. 권한 승인, 시간 기반 트리거, 이메일 발송이 들어가므로 본문 실습 흐름과 분리합니다.</p>
+          <p>GitHub Pages는 1분마다 혼자 실행될 수 없습니다. 그래서 Apps Script의 시간 기반 트리거를 사용합니다.</p>
+          <h3>Script Properties</h3>
+          <ul>
+            <li>`BUS_ALERT_EMAIL`: 알림 받을 이메일</li>
+            <li>`BUS_ALERT_ARS_ID`: 정류소번호, 기본값 `21347`</li>
+            <li>`BUS_ALERT_ROUTE_NAME`: 노선명, 기본값 `관악11`</li>
+            <li>`BUS_ALERT_COOLDOWN_MINUTES`: 중복 메일 방지 시간, 기본값 `10`</li>
+          </ul>
+          <h3>트리거 설정</h3>
+          <ol>
+            <li>Apps Script 왼쪽에서 트리거를 엽니다.</li>
+            <li>실행 함수로 `checkBusAndSendMail`을 고릅니다.</li>
+            <li>이벤트 소스는 시간 기반으로 고릅니다.</li>
+            <li>분 단위 타이머, 1분마다 실행으로 설정합니다.</li>
+          </ol>
+          <div class="teacher"><strong>교사용 메모</strong><p>메일 주소와 몇 분 전 알림 설정을 공개 화면에서 아무나 바꾸게 하면 안 됩니다. 필요하면 관리자 PIN 같은 보호 장치를 붙인 뒤 Apps Script가 설정을 저장하는 구조로 확장합니다.</p></div>
+        </section>
 
-          if (/^\d+\. /.test(line)) {
-            openList("ol");
-            html.push(`<li>${inline(line.replace(/^\d+\. /, ""))}</li>`);
-            continue;
-          }
-
-          closeList();
-          html.push(`<p>${inline(line)}</p>`);
-        }
-
-        closeList();
-        return html.join("");
-
-        function openList(type) {
-          if (listType === type) return;
-          closeList();
-          html.push(`<${type}>`);
-          listType = type;
-        }
-
-        function closeList() {
-          if (!listType) return;
-          html.push(`</${listType}>`);
-          listType = null;
-        }
-      }
-
-      function inline(value) {
-        return escapeHtml(value)
-          .replace(/`([^`]+)`/g, "<code>$1</code>")
-          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-      }
-
-      function escapeHtml(value) {
-        return String(value)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
-      }
-    </script>
+        <section class="lesson" id="trouble">
+          <h2>오류 해결 카드</h2>
+          <div class="warning"><strong>NO_BUS_API_KEY</strong><p>Apps Script Script Properties에 `BUS_API_KEY`가 없습니다.</p></div>
+          <div class="warning"><strong>SERVICE KEY IS NOT REGISTERED</strong><p>키가 틀렸거나 해당 서울 버스 서비스에 승인된 키가 아닐 수 있습니다.</p></div>
+          <div class="warning"><strong>버스 API가 없어요</strong><p>Google Cloud에서 찾고 있는지 확인합니다. 서울 버스 정보는 `https://api.bus.go.kr/` 쪽입니다.</p></div>
+          <div class="warning"><strong>급식 날짜가 이상해요</strong><p>한국 시간 기준 오늘과 내일을 조회합니다. `mealDate`에 특정 날짜가 들어 있으면 그 날짜부터 이틀을 봅니다.</p></div>
+          <div class="warning"><strong>투표 저장이 안 돼요</strong><p>Google Sheets 권한 승인, `MEAL_VOTE_SHEET_ID`, Apps Script 새 버전 배포 여부를 확인합니다.</p></div>
+        </section>
+      </main>
+    </div>
   </body>
 </html>
