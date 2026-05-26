@@ -26,7 +26,7 @@ https://greatsong.github.io/sample_app/
 
 - Open-Meteo 서울 현재 날씨: 키 없이 바로 동작
 - 마을버스 도착 정보: Apps Script 프록시 URL 입력 후 활성화
-- NEIS 급식식단정보: 당곡고 샘플 설정, 오늘 기준 가장 가까운 급식일 자동 선택
+- NEIS 급식식단정보: 당곡고 샘플 설정, 오늘과 내일 중식 메뉴 표시
 - 급식 메뉴 투표: 브라우저 localStorage 저장
 
 ## Apps Script 프록시
