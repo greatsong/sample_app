@@ -1,19 +1,7 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>부록 설정과 오류 해결</title><link rel="stylesheet" href="../css/style.css"><style>.wrap{width:min(980px,calc(100% - 32px));margin:28px auto 72px}.book{background:#fffef9;border:1px solid var(--line);border-radius:8px;padding:28px}.nav a{margin-right:10px}pre{overflow:auto;background:#fbfcfb;border:1px solid var(--line);border-radius:8px;padding:14px}</style></head><body><header class="app-header"><div><p class="eyebrow">Appendix</p><h1>부록. Apps Script 설정과 오류 해결</h1><p class="lead">학생 본문과 교사용 운영 내용을 분리해 정리합니다.</p></div></header><main class="wrap"><p class="nav"><a href="../textbook.html">목차</a><a href="06.html">이전 장</a><a href="finish.html">마무리</a></p><article class="book"><h2>필요한 Script Properties</h2><pre><code>BUS_API_KEY
-  서울 버스 API 키입니다. GitHub에 올리지 않습니다.
-
-MEAL_VOTE_SHEET_ID
-  급식 투표를 저장할 Google Sheets 스프레드시트 ID입니다.
-
-BUS_ALERT_EMAIL
-  교사용 5분 전 메일 알림을 받을 주소입니다. 선택 사항입니다.
-
-BUS_ALERT_ARS_ID
-  메일 알림에 사용할 정류소번호입니다. 선택 사항입니다.
-
-BUS_ALERT_ROUTE_NAME
-  메일 알림에 사용할 노선명입니다. 선택 사항입니다.</code></pre><h2>배포 설정</h2><pre><code>배포 유형: 웹 앱
-실행 사용자: 나
-액세스 권한: 모든 사용자</code></pre><p>Apps Script는 코드를 저장했다고 배포 URL에 바로 반영되지 않을 수 있습니다. 수정 후에는 새 버전으로 다시 배포합니다.</p><h2>교사용 확장: 5분 전 메일 알림</h2><p>메일 알림은 권한 승인, 시간 기반 트리거, 이메일 발송이 들어가므로 학생 본문 실습이 아니라 교사용 운영 또는 확장 활동으로 다룹니다.</p><ol><li>Apps Script에 BUS_ALERT_EMAIL을 넣습니다.</li><li>필요하면 BUS_ALERT_ARS_ID와 BUS_ALERT_ROUTE_NAME을 넣습니다.</li><li>트리거 메뉴를 엽니다.</li><li>checkBusAndSendMail 함수를 선택합니다.</li><li>시간 기반 트리거를 선택합니다.</li><li>분 단위 타이머, 1분마다로 설정합니다.</li><li>실제 메일이 오는지 확인합니다.</li></ol><h2>문제 해결</h2><ul><li>화면이 안 열릴 때: GitHub Pages 주소, index.html 위치, 배포 완료 여부를 확인합니다.</li><li>날씨가 안 나올 때: weather.enabled, 위도/경도, 쉼표를 확인합니다.</li><li>급식이 안 나올 때: 교육청 코드, 학교 코드, mealCode, mealDate를 확인합니다.</li><li>투표가 저장되지 않을 때: MEAL_VOTE_SHEET_ID, Apps Script 새 배포, Google Sheets 권한을 확인합니다.</li><li>버스가 안 나올 때: BUS_API_KEY, /exec URL, 정류소번호, 노선명, localStorage를 확인합니다.</li></ul><h2>AI에게 다시 묻는 법</h2><pre><code>방금 준 코드가 내 프로젝트에서 오류가 났어.
-내 파일 구조는 index.html, css/style.css, js/config.js, js/app.js야.
-기존 기능을 유지하면서 가장 작은 수정만 제안해줘.
-수정할 파일 이름과 바꿀 위치를 먼저 말해줘.</code></pre></article></main></body></html>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>부록 설정과 오류 해결</title><link rel="stylesheet" href="../assets/textbook.css"></head><body><header class="top"><div class="bar"><a class="brand" href="../textbook.html">생활 데이터 웹앱 만들기</a><nav class="nav"><a href="../index.html">샘플 앱</a><a href="../textbook.html">목차</a></nav></div><div class="hero"><p class="eyebrow">Appendix</p><h1>설정과 오류 해결</h1><p class="lead">Apps Script, API 키, Console 오류, 수업 운영 체크리스트를 따로 모았습니다.</p></div></header><main class="wrap"><p class="chapter-nav"><a class="btn" href="07.html">7장</a><a class="btn primary" href="finish.html">마무리</a></p><article class="book"><h2>Apps Script 배포 체크</h2><ul><li>Script Properties에 키와 Sheet ID를 넣었는지 확인합니다.</li><li>웹 앱 URL은 /exec로 끝나는 주소를 사용합니다.</li><li>코드를 바꾼 뒤에는 새 배포 버전을 만들어야 합니다.</li></ul><h2>키 관리 원칙</h2><ul><li>BUS_API_KEY 같은 비밀키는 GitHub에 올리지 않습니다.</li><li>브라우저에서 보여도 되는 값과 숨겨야 하는 값을 구분합니다.</li><li>README, 발표 슬라이드에도 실제 키를 적지 않습니다.</li></ul><h2>AI 오류 질문 템플릿</h2><pre><code>내 생활 데이터 웹앱에서 문제가 생겼어.
+바꾼 파일:
+기대한 화면:
+실제 화면:
+Console 오류:
+Network 상태:
+초보자 기준으로 원인을 좁히는 순서를 알려줘.</code></pre></article></main></body></html>
