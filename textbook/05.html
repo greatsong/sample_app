@@ -1,0 +1,11 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>5장 버스 도착 정보</title><link rel="stylesheet" href="../css/style.css"><style>.wrap{width:min(980px,calc(100% - 32px));margin:28px auto 72px}.book{background:#fffef9;border:1px solid var(--line);border-radius:8px;padding:28px}.nav a{margin-right:10px}pre{overflow:auto;background:#fbfcfb;border:1px solid var(--line);border-radius:8px;padding:14px}</style></head><body><header class="app-header"><div><p class="eyebrow">Chapter 5</p><h1>5장. 버스 도착 정보 붙이기</h1><p class="lead">버스 API 키를 브라우저에 넣지 않고 Apps Script 프록시로 안전하게 연결합니다.</p></div></header><main class="wrap"><p class="nav"><a href="../textbook.html">목차</a><a href="04.html">이전 장</a><a href="06.html">다음 장</a></p><article class="book"><h2>이번 목표</h2><p>마을버스 도착 정보를 화면에 붙입니다. 버스 API는 키와 CORS 문제가 있으므로 브라우저가 직접 호출하지 않고 Apps Script가 중간 서버처럼 대신 호출합니다.</p><h2>왜 프록시가 필요한가요?</h2><p>GitHub Pages는 공개 웹사이트입니다. 여기에 버스 API 키를 넣으면 다른 사람이 볼 수 있습니다. 또한 일부 공공 API는 브라우저에서 직접 호출할 때 CORS 또는 HTTP 문제를 만납니다.</p><pre><code>브라우저 앱
+  -> Apps Script Web App URL
+  -> Script Properties의 BUS_API_KEY 읽기
+  -> 서울 버스 API 호출
+  -> 필요한 정보만 브라우저에 반환</code></pre><h2>따라하기</h2><ol><li>서울 버스 API 키를 준비합니다.</li><li>Apps Script 프로젝트를 엽니다.</li><li>Script Properties에 BUS_API_KEY를 추가합니다.</li><li>apps-script/Code.gs를 붙여넣습니다.</li><li>새 배포에서 웹 앱을 선택합니다.</li><li>실행 사용자는 나, 액세스 권한은 모든 사용자로 설정합니다.</li><li>Web App URL을 복사합니다.</li><li>샘플 앱의 마을버스 프록시 설정에 URL을 넣습니다.</li><li>정류소번호와 노선명을 입력하고 조회합니다.</li></ol><h2>설정 예시</h2><pre><code>villageBus: {
+  enabled: true,
+  proxyUrl: "https://script.google.com/macros/s/.../exec",
+  arsId: "21347",
+  routeName: "관악11"
+}</code></pre><h2>체크리스트</h2><ul><li>BUS_API_KEY가 Apps Script Script Properties에 있습니다.</li><li>Web App URL이 /exec로 끝납니다.</li><li>정류소번호와 노선명이 실제 값과 같습니다.</li><li>버스 카드가 실시간 연결 상태입니다.</li></ul><h2>자주 나는 오류</h2><ul><li>서울 버스 API는 Google API가 아닙니다. api.bus.go.kr에서 확인합니다.</li><li>NO_BUS_API_KEY는 Script Properties에 BUS_API_KEY가 없다는 뜻입니다.</li><li>403 오류는 배포 권한 또는 첫 실행 권한 승인 문제일 수 있습니다.</li><li>예전 설정이 남아 있으면 설정 삭제 후 새로고침합니다.</li></ul><h2>AI 프롬프트</h2><pre><code>GitHub Pages에서 버스 API 키를 직접 넣지 않고 Apps Script 프록시를 사용하는 이유를
+초보자에게 설명해줘. CORS, HTTP, 비밀키 노출 문제를 쉬운 말로 풀어줘.</code></pre></article></main></body></html>

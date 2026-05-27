@@ -1,0 +1,18 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>6장 나만의 설정</title><link rel="stylesheet" href="../css/style.css"><style>.wrap{width:min(980px,calc(100% - 32px));margin:28px auto 72px}.book{background:#fffef9;border:1px solid var(--line);border-radius:8px;padding:28px}.nav a{margin-right:10px}pre{overflow:auto;background:#fbfcfb;border:1px solid var(--line);border-radius:8px;padding:14px}</style></head><body><header class="app-header"><div><p class="eyebrow">Chapter 6</p><h1>6장. 나만의 학교/정류소로 바꾸기</h1><p class="lead">샘플 앱을 내 생활권에 맞게 바꿉니다.</p></div></header><main class="wrap"><p class="nav"><a href="../textbook.html">목차</a><a href="05.html">이전 장</a><a href="appendix.html">다음</a></p><article class="book"><h2>이번 목표</h2><p>이미 작동하는 샘플 앱을 유지하면서 설정값만 하나씩 바꿉니다. 한 번에 많이 바꾸면 어디서 문제가 났는지 찾기 어렵기 때문에 날씨, 급식, 버스 순서로 따로 확인합니다.</p><h2>바꿀 값 정리</h2><pre><code>날씨
+- label
+- latitude
+- longitude
+
+급식
+- educationOfficeCode
+- schoolCode
+- schoolName
+- mealCode
+- mealDate
+
+버스
+- proxyUrl
+- arsId
+- routeName</code></pre><h2>따라하기</h2><ol><li>현재 앱이 정상 작동하는지 먼저 확인합니다.</li><li>js/config.js의 원래 값을 메모합니다.</li><li>날씨 지역만 바꾸고 저장합니다.</li><li>새로고침해서 날씨 카드만 확인합니다.</li><li>급식 학교 설정만 바꾸고 저장합니다.</li><li>새로고침해서 급식 카드만 확인합니다.</li><li>버스 정류소번호와 노선명을 바꾸고 저장합니다.</li><li>투표가 Google Sheets에 저장되는지 확인합니다.</li><li>GitHub Pages 주소에서 같은 화면이 열리는지 확인합니다.</li></ol><h2>최종 점검표</h2><ul><li>날씨 지역 이름이 바뀌었습니다.</li><li>급식 학교 이름이 바뀌었습니다.</li><li>급식 날짜가 오늘과 내일 기준입니다.</li><li>버스 정류소번호와 노선명이 바뀌었습니다.</li><li>투표가 Google Sheets에 저장됩니다.</li><li>GitHub Pages 주소에서 앱이 열립니다.</li></ul><h2>자주 나는 오류</h2><ul><li>한 번에 많이 바꿔서 어디가 문제인지 모르면 샘플 값으로 되돌립니다.</li><li>GitHub Pages에서 이전 화면이 보이면 배포가 끝날 때까지 기다리고 새로고침합니다.</li><li>급식이 안 나오면 교육청 코드와 학교 코드를 확인합니다.</li><li>버스가 안 나오면 샘플 정류소번호와 노선명으로 먼저 확인합니다.</li></ul><h2>AI 프롬프트</h2><pre><code>아래 config.js 설정을 내 학교와 정류소에 맞게 바꾸려고 해.
+한 번에 다 고치지 말고, 안전한 수정 순서를 알려줘.
+각 단계마다 확인할 화면도 같이 말해줘.</code></pre></article></main></body></html>
