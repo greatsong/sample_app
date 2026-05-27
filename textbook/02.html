@@ -1,10 +1,15 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02장 바이브코딩 작업법</title><link rel="stylesheet" href="../assets/textbook.css"></head><body><header class="top"><div class="bar shell"><a class="brand" href="../textbook.html">생활 데이터 웹앱 만들기</a><nav class="nav"><a href="../index.html">샘플 앱</a><a href="../textbook.html">목차</a></nav></div><div class="hero shell"><p class="eyebrow">Phase 2</p><h1>바이브코딩 작업법 익히기</h1><p class="lead">AI에게 한 번에 완성품을 맡기지 않고 작은 수정과 검증을 반복하는 제작 루틴을 익힙니다.</p></div></header><main class="chapter"><p class="chapter-nav"><a class="btn" href="01.html">이전 장</a><a class="btn primary" href="03.html">다음 장</a></p><article class="book"><div class="band"><b>우와 모먼트</b><br>Console의 빨간 글씨가 실패가 아니라 다음 질문 재료가 됩니다.</div><div class="teacher"><b>교사용 운영 포인트</b><ul><li>기능을 많이 추가하지 말고 작업 습관을 만듭니다.</li><li>같은 대화창에서 단계적으로 요구를 키우는 방식을 시연합니다.</li><li>AI 답변은 실행 결과로 검증해야 한다는 규칙을 세웁니다.</li></ul></div><h2>파일 역할 지도</h2><pre><code>index.html        화면 구조
-css/style.css    디자인
-js/config.js     학교, 좌표, 정류소, 프록시 URL 설정
-js/app.js        버튼 클릭과 화면 업데이트
-js/adapters/*    API와 저장소 연결
-apps-script/*    비밀키와 Google Sheets 처리</code></pre><h2>바이브코딩 루프</h2><ol><li>작동하는 화면을 캡처합니다.</li><li>한 파일에서 한 가지 값만 바꿉니다.</li><li>새로고침하고 Console, Network를 봅니다.</li><li>실패하면 오류와 바꾼 내용을 AI에게 함께 줍니다.</li><li>AI 답변을 다시 실행해 확인합니다.</li></ol><h2>오류 질문 템플릿</h2><pre><code>바꾼 파일:
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02장. 바이브코딩 작업법 익히기 | 생활 데이터 웹앱 만들기</title><meta name="description" content="AI에게 한 번에 완성품을 맡기지 않고, 작은 수정과 검증을 반복하는 웹앱 제작 루틴을 익힙니다."><link rel="stylesheet" href="../assets/textbook.css"></head><body><header class="top"><div class="bar shell"><a class="brand" href="../textbook.html">생활 데이터 웹앱 만들기</a><nav class="nav"><a href="../index.html">샘플 앱</a><a href="../textbook.html">교재 목차</a><a href="../textbook/appendix.html">부록</a><a href="../textbook/finish.html">마무리</a></nav></div><div class="hero shell"><p class="eyebrow">Web Textbook</p><h1>02장. 바이브코딩 작업법 익히기</h1><p class="lead">AI에게 한 번에 완성품을 맡기지 않고, 작은 수정과 검증을 반복하는 웹앱 제작 루틴을 익힙니다.</p></div></header><main class="chapter-wrap"><p class="chapter-nav"><a class="btn" href="../textbook.html">목차</a><a class="btn" href="01.html">이전 장</a><a class="btn primary" href="03.html">다음 장</a></p><article class="book"><p class="eyebrow">Phase 2</p><h2>바이브코딩 작업법 익히기</h2><p class="lead">AI가 코드를 써 주는 시대에도, 좋은 개발자는 질문을 작게 쪼개고 결과를 검증합니다.</p><div class="band"><b>최종 산출물</b><br>파일 역할 지도, 오류 질문 템플릿, 첫 AI 협업 기록</div><div class="teacher"><b>교사용 운영 포인트</b><ul><li>이 장은 기능을 많이 추가하는 장이 아니라 작업 습관을 만드는 장입니다.</li><li>vibe-coding-class의 핵심처럼 같은 대화창에서 단계적으로 요구를 키우는 방식을 시연합니다.</li><li>학생이 AI 답변을 그대로 붙여넣는 순간을 막기보다, 붙여넣은 뒤 무엇을 확인해야 하는지 알려주는 쪽이 현실적입니다.</li></ul></div><h2>파일 역할 지도</h2><p>처음부터 모든 코드를 읽을 필요는 없습니다. 대신 어느 파일이 어느 일을 맡는지 알아야 AI에게도 정확히 물어볼 수 있습니다.</p><pre><code>index.html        화면의 큰 구조
+css/style.css    색, 카드, 버튼, 모바일 배치
+js/config.js     학교, 좌표, 정류소, 프록시 URL 설정판
+js/app.js        버튼 클릭, 화면 그리기, 상태 업데이트
+js/adapters/*    외부 API와 저장소를 연결하는 통로
+apps-script/*    비밀키와 Google Sheets를 다루는 중간 서버</code></pre><h2>바이브코딩 루프</h2><ul><li>1단계: 지금 작동하는 화면을 캡처합니다.</li><li>2단계: 한 파일에서 한 가지 값만 바꿉니다.</li><li>3단계: 새로고침하고 화면, Console, Network를 봅니다.</li><li>4단계: 실패하면 오류 메시지와 바꾼 내용을 함께 AI에게 줍니다.</li><li>5단계: AI 답변을 그대로 믿지 않고 다시 실행해 확인합니다.</li></ul><h2>나쁜 질문과 좋은 질문</h2><p>나쁜 질문은 '안 돼요'입니다. 좋은 질문은 'js/config.js에서 schoolCode를 바꿨고, 기대한 결과는 급식 학교 이름 변경인데, Console에 이런 오류가 나왔다'입니다.</p><p>AI는 맥락이 있어야 도와줄 수 있습니다. 파일명, 바꾼 내용, 기대한 화면, 실제 오류를 같이 주는 습관을 만듭니다.</p><h2>오류 질문 템플릿</h2><pre><code>내 생활 데이터 웹앱에서 문제가 생겼어.
+바꾼 파일:
+바꾼 내용:
 기대한 화면:
 실제 화면:
 Console 오류:
-기존 기능을 깨뜨리지 않는 가장 작은 수정부터 제안해줘.</code></pre></article></main></body></html>
+Network 상태:
+
+기존 기능을 깨뜨리지 않고 가장 작은 수정부터 제안해줘.</code></pre><h2>AI 프롬프트 카탈로그</h2><ul><li>아래 파일 목록을 보고 생활 데이터 웹앱의 구조를 초보자에게 설명해줘.</li><li>내 오류 질문을 더 좋은 개발자 질문으로 바꿔줘.</li><li>AI가 준 코드를 붙여넣기 전에 확인할 체크리스트를 만들어줘.</li></ul><h2>확인 체크리스트</h2><ul><li>config.js와 app.js의 역할 차이를 설명할 수 있다.</li><li>Console 오류를 복사해 질문할 수 있다.</li><li>한 번에 여러 파일을 바꾸지 않는 이유를 안다.</li></ul><h2>확장 활동</h2><p>학생에게 일부러 쉼표 하나가 빠진 설정을 주고, Console 오류를 읽어 수정하게 합니다.</p></article></main><footer class="footer"><div class="shell">완성본 체험, GitHub Pages, 공공 API, Google Sheets, Apps Script 프록시, 발표까지 이어지는 생활 데이터 웹앱 교재</div></footer></body></html>
