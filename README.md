@@ -1,41 +1,32 @@
-# 범용 바이브 코딩 웹앱 샘플
+# 생활 데이터 웹앱 만들기
 
-GitHub Pages에 배포하는 정적 웹앱에서 시작해 날씨, 마을버스, NEIS 급식 API와 급식 메뉴 투표 기능까지 확장하는 왕초보용 샘플 프로젝트입니다.
+GitHub Pages에 배포하는 정적 웹앱에서 시작해 날씨, NEIS 급식, Google Sheets 투표 저장, Apps Script 버스 프록시까지 단계별로 확장하는 고등학생용 웹교재입니다.
 
-## 배포 주소
+배포 주소: https://greatsong.github.io/sample_app/textbook.html
 
-https://greatsong.github.io/sample_app/
+## 교재 구조
 
-## 완성 교재
+- `textbook.html`: 전체 목차와 수업 흐름
+- `textbook/00.html` ~ `textbook/07.html`: 장별 수업 페이지
+- `textbook/appendix.html`: Apps Script, API 키, 오류 해결
+- `textbook/finish.html`: 발표와 자기평가
+- `index.html`: 완성 샘플 앱
 
-- HTML 교재: https://greatsong.github.io/sample_app/textbook.html
-- Markdown 교재: [생활 데이터 웹앱 만들기](docs/TEXTBOOK.md)
-- 버스 프록시 가이드: [BUS_PROXY_GUIDE.md](docs/BUS_PROXY_GUIDE.md)
-- 버스 API 키 발급 가이드: [BUS_API_KEY_GUIDE.md](docs/BUS_API_KEY_GUIDE.md)
+## 수업 설계
 
-## 챕터
+기능별 설명서가 아니라 앱이 단계별로 강해지는 흐름입니다.
 
-1. `chapters/01-github-pages`: GitHub Pages 배포
-2. `chapters/02-vibe-coding`: 바이브 코딩 작업 흐름
-3. `chapters/03-google-sheets`: Google Sheets 연동
-4. `chapters/04-open-api`: 날씨, 마을버스, NEIS 급식 API와 투표
-5. `chapters/05-database`: DB 연동과 투표 저장 확장
-6. `chapters/06-final-project`: 최종 프로젝트
+1. 완성본 체험
+2. GitHub Pages 배포
+3. 바이브코딩 작업법
+4. 공개 데이터 붙이기
+5. 사용자 행동 저장하기
+6. 비밀키 숨기는 프록시 만들기
+7. 내 생활권 앱으로 리디자인하기
+8. 발표와 갤러리
 
-## 현재 포함 기능
+## 보안 원칙
 
-- Open-Meteo 서울 현재 날씨: 키 없이 바로 동작
-- 마을버스 도착 정보: Apps Script 프록시 URL 입력 후 활성화
-- NEIS 급식식단정보: 당곡고 샘플 설정, 오늘과 내일 중식 메뉴 표시
-- 급식 메뉴 투표: 브라우저 localStorage 저장
-
-## Apps Script 프록시
-
-버스 API 키는 GitHub Pages 코드에 넣지 않습니다.
-
-- Apps Script 원본: [apps-script/Code.gs](apps-script/Code.gs)
-- Apps Script 매니페스트: [apps-script/appsscript.json](apps-script/appsscript.json)
-- 기본 정류소: 연희빌라 `21347`
-- 기본 노선: `관악11`
-
-공공데이터포털의 Encoding 키와 Decoding 키 중 어느 것을 넣어도 처리하도록 프록시 코드를 보강했습니다. 그래도 수업에서는 Decoding 키를 Script Properties에 넣는 방식으로 설명하는 편이 가장 쉽습니다.
+- API 키는 GitHub에 올리지 않습니다.
+- Apps Script Script Properties에 비밀값을 저장합니다.
+- AI가 만든 코드는 실행 결과로 검증합니다.
