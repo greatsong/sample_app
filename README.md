@@ -4,29 +4,14 @@ GitHub Pages에 배포하는 정적 웹앱에서 시작해 날씨, NEIS 급식, 
 
 배포 주소: https://greatsong.github.io/sample_app/textbook.html
 
-## 교재 구조
+## 구조
 
-- `textbook.html`: 전체 목차와 수업 흐름
-- `textbook/00.html` ~ `textbook/07.html`: 장별 수업 페이지
-- `textbook/appendix.html`: Apps Script, API 키, 오류 해결
-- `textbook/finish.html`: 발표와 자기평가
-- `index.html`: 완성 샘플 앱
+- textbook.html: 전체 목차
+- textbook/00.html ~ textbook/07.html: Phase형 장별 교재
+- textbook/appendix.html: 설정과 오류 해결
+- textbook/finish.html: 발표와 자기평가
+- index.html: 완성 샘플 앱
 
-## 수업 설계
+## 설계 기준
 
-기능별 설명서가 아니라 앱이 단계별로 강해지는 흐름입니다.
-
-1. 완성본 체험
-2. GitHub Pages 배포
-3. 바이브코딩 작업법
-4. 공개 데이터 붙이기
-5. 사용자 행동 저장하기
-6. 비밀키 숨기는 프록시 만들기
-7. 내 생활권 앱으로 리디자인하기
-8. 발표와 갤러리
-
-## 보안 원칙
-
-- API 키는 GitHub에 올리지 않습니다.
-- Apps Script Script Properties에 비밀값을 저장합니다.
-- AI가 만든 코드는 실행 결과로 검증합니다.
+기존 기능 설명을 버리고, 목차와 기능 요소만 바탕으로 전면 재작성했습니다. 수업 흐름은 완성본 체험, 배포, 바이브코딩 작업법, 공개 데이터 연결, 사용자 데이터 저장, 프록시와 보안, 자기화, 발표 순서입니다.

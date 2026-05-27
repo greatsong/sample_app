@@ -1,1 +1,58 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07장 발표와 갤러리</title><link rel="stylesheet" href="../assets/textbook.css"></head><body><header class="top"><div class="bar"><a class="brand" href="../textbook.html">생활 데이터 웹앱 만들기</a><nav class="nav"><a href="../index.html">샘플 앱</a><a href="../textbook.html">목차</a></nav></div><div class="hero"><p class="eyebrow">Chapter 7</p><h1>발표와 갤러리</h1><p class="lead">내 앱이 어떤 문제를 해결하는지 데이터 흐름 중심으로 설명합니다.</p></div></header><main class="wrap"><p class="chapter-nav"><a class="btn" href="06.html">이전 장</a><a class="btn primary" href="finish.html">마무리</a></p><article class="book"><div class="band"><b>우와 모먼트</b><br>친구들이 내 앱을 직접 써보고 좋은 점과 다음 버전 아이디어를 남깁니다.</div><h2>목표</h2><ul><li>앱의 기능이 아니라 데이터 흐름을 설명합니다.</li><li>보안상 숨긴 값과 공개해도 되는 값을 구분합니다.</li><li>피드백을 다음 commit 계획으로 바꿉니다.</li></ul><h2>따라하기</h2><ol><li>앱 URL을 열고 핵심 카드 3개를 보여줍니다.</li><li>날씨·급식·투표·버스 데이터가 어디서 오는지 말합니다.</li><li>Google Sheets와 Apps Script가 맡는 일을 설명합니다.</li><li>친구에게 실제로 써보게 하고 피드백을 받습니다.</li><li>다음 버전에 고칠 점 하나를 GitHub issue 또는 메모로 남깁니다.</li></ol><h2>체크리스트</h2><ul><li>내 앱 URL이 열린다.</li><li>API 키를 어디에 숨겼는지 설명할 수 있다.</li><li>친구 피드백을 적어도 3개 받았다.</li><li>다음 버전에서 바꿀 점을 하나 정했다.</li></ul><h2>AI 프롬프트</h2><pre><code>내 생활 데이터 웹앱 발표를 1분짜리로 준비하려고 해. 문제, 데이터 출처, 내가 바꾼 점, 보안상 신경 쓴 점, 다음 버전 계획 순서로 발표 대본을 만들어줘.</code></pre></article></main></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>07장. 발표와 갤러리 | 생활 데이터 웹앱 만들기</title>
+  <meta name="description" content="기능 자랑이 아니라 데이터 흐름과 보안 판단을 설명하고, 친구 피드백을 다음 버전 계획으로 바꿉니다.">
+  <link rel="stylesheet" href="../assets/textbook.css">
+</head>
+<body>
+  <header class="top">
+    <div class="bar shell"><a class="brand" href="../textbook.html">생활 데이터 웹앱 만들기</a><nav class="nav"><a href="../index.html">샘플 앱</a><a href="../textbook.html">교재 목차</a><a href="../textbook/appendix.html">부록</a><a href="../textbook/finish.html">마무리</a></nav></div>
+    <div class="hero shell">
+      <p class="eyebrow">Web Textbook</p>
+      <h1>07장. 발표와 갤러리</h1>
+      <p class="lead">기능 자랑이 아니라 데이터 흐름과 보안 판단을 설명하고, 친구 피드백을 다음 버전 계획으로 바꿉니다.</p>
+    </div>
+  </header>
+  <main class="chapter-wrap">
+    <p class="chapter-nav">
+      <a class="btn" href="../textbook.html">목차</a>
+      <a class="btn" href="06.html">이전 장</a>
+      <a class="btn primary" href="finish.html">마무리</a>
+    </p>
+    <article class="book">
+      <p class="eyebrow">Phase 7</p>
+      <h2>발표와 갤러리</h2>
+      <p class="lead">진짜 프로젝트는 만든 뒤 끝나지 않습니다. 누군가 써 보고, 질문하고, 다음 버전이 생길 때 프로젝트가 살아납니다.</p>
+      <div class="band"><b>최종 산출물</b><br>1분 발표, 자기평가, 친구 피드백 3개, 다음 버전 이슈 1개</div>
+      <div class="teacher"><b>교사용 운영 포인트</b><ul><li>발표는 디자인 자랑으로 흐르기 쉽습니다. 반드시 데이터 출처, 저장 위치, 숨긴 키, 다음 개선을 말하게 합니다.</li><li>갤러리 워크는 별점보다 구체 피드백 중심으로 운영합니다.</li><li>climate-action-365처럼 운영 가능한 프로젝트로 이어지려면 마지막에 인계 가능한 기록이 남아야 합니다.</li></ul></div>
+      <h2>1분 발표 구조</h2>
+<pre><code>1. 내 앱은 누구에게 필요한가
+2. 날씨 데이터는 어디에서 오는가
+3. 급식 데이터는 어디에서 오는가
+4. 투표 데이터는 어디에 저장되는가
+5. 버스 API 키는 어디에 숨겼는가
+6. 내가 직접 바꾼 점은 무엇인가
+7. 다음 버전에서 고칠 점은 무엇인가</code></pre>
+<h2>갤러리 피드백</h2>
+<ul><li>이 앱에서 실제로 바로 쓸 만한 기능은 무엇인가요?</li><li>데이터가 어디서 오는지 설명이 이해되었나요?</li><li>비밀키를 보호한 구조가 납득되었나요?</li><li>모바일에서 읽기 쉬웠나요?</li><li>다음 버전에 추가하면 좋을 생활 데이터는 무엇인가요?</li></ul>
+<h2>자기평가</h2>
+<pre><code>내 GitHub Pages URL:
+가장 어려웠던 장:
+내가 해결한 오류:
+AI에게 물어본 질문 중 가장 도움이 된 것:
+비밀키를 보호하기 위해 한 일:
+다음 버전에서 바꿀 점:</code></pre>
+      <h2>AI 프롬프트 카탈로그</h2>
+      <ul><li>내 생활 데이터 웹앱 발표를 1분짜리로 준비하려고 해. 문제, 데이터 출처, 내가 바꾼 점, 보안상 신경 쓴 점, 다음 버전 계획 순서로 대본을 만들어줘.</li><li>친구 피드백을 다음 버전 개발 이슈로 바꾸는 문장 예시를 만들어줘.</li><li>내 앱의 데이터 흐름을 발표용으로 짧게 설명해줘.</li></ul>
+      <h2>확인 체크리스트</h2>
+      <ul><li>내 앱 URL이 열린다.</li><li>데이터 출처를 설명할 수 있다.</li><li>API 키를 어디에 숨겼는지 설명할 수 있다.</li><li>친구 피드백 3개를 다음 계획으로 바꿨다.</li></ul>
+      <h2>확장 활동</h2>
+      <p>우수작을 학급 갤러리 페이지로 모으고, 다음 학기 학생들이 fork해서 이어 만들 수 있게 합니다.</p>
+    </article>
+  </main>
+  <footer class="footer"><div class="shell">완성본 체험, GitHub Pages, 공공 API, Google Sheets, Apps Script 프록시, 발표까지 이어지는 생활 데이터 웹앱 교재</div></footer>
+</body>
+</html>

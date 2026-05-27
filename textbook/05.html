@@ -1,1 +1,54 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05장 비밀키 숨기는 프록시 만들기</title><link rel="stylesheet" href="../assets/textbook.css"></head><body><header class="top"><div class="bar"><a class="brand" href="../textbook.html">생활 데이터 웹앱 만들기</a><nav class="nav"><a href="../index.html">샘플 앱</a><a href="../textbook.html">목차</a></nav></div><div class="hero"><p class="eyebrow">Chapter 5</p><h1>비밀키 숨기는 프록시 만들기</h1><p class="lead">버스 API 키를 GitHub Pages에 넣지 않고 Apps Script가 대신 호출하게 합니다.</p></div></header><main class="wrap"><p class="chapter-nav"><a class="btn" href="04.html">이전 장</a><a class="btn primary" href="06.html">다음 장</a></p><article class="book"><div class="band"><b>우와 모먼트</b><br>공개 웹앱인데도 비밀키를 숨기고 실시간 버스 정보를 가져옵니다.</div><h2>목표</h2><ul><li>API 키 노출, CORS, HTTP/HTTPS 문제가 왜 생기는지 이해합니다.</li><li>Apps Script 프록시 구조를 설명합니다.</li><li>정류소번호와 노선명을 바꿔 내 버스 카드로 만듭니다.</li></ul><h2>따라하기</h2><ol><li>서울 버스 API 키를 준비합니다.</li><li>Apps Script Script Properties에 BUS_API_KEY를 넣습니다.</li><li>apps-script/Code.gs를 붙여넣고 새 배포를 만듭니다.</li><li>실행 사용자는 나, 액세스 권한은 모든 사용자로 설정합니다.</li><li>Web App URL을 앱 설정의 proxyUrl에 넣습니다.</li><li>arsId와 routeName을 바꾸고 버스 카드 상태를 확인합니다.</li></ol><h2>체크리스트</h2><ul><li>BUS_API_KEY가 GitHub 파일 안에 없다.</li><li>proxyUrl은 /exec로 끝난다.</li><li>정류소번호와 노선명이 실제 값이다.</li><li>버스 카드가 실시간 연결 상태다.</li></ul><h2>AI 프롬프트</h2><pre><code>GitHub Pages에서 버스 API 키를 직접 넣지 않고 Apps Script 프록시를 쓰는 이유를 초보자에게 설명해줘. 비밀키 노출, CORS, HTTPS 문제를 쉬운 말로 풀어줘.</code></pre></article></main></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>05장. 비밀키 숨기는 프록시 만들기 | 생활 데이터 웹앱 만들기</title>
+  <meta name="description" content="버스 API 키를 공개 코드에 넣지 않고 Apps Script 프록시를 통해 안전하게 실시간 도착 정보를 가져옵니다.">
+  <link rel="stylesheet" href="../assets/textbook.css">
+</head>
+<body>
+  <header class="top">
+    <div class="bar shell"><a class="brand" href="../textbook.html">생활 데이터 웹앱 만들기</a><nav class="nav"><a href="../index.html">샘플 앱</a><a href="../textbook.html">교재 목차</a><a href="../textbook/appendix.html">부록</a><a href="../textbook/finish.html">마무리</a></nav></div>
+    <div class="hero shell">
+      <p class="eyebrow">Web Textbook</p>
+      <h1>05장. 비밀키 숨기는 프록시 만들기</h1>
+      <p class="lead">버스 API 키를 공개 코드에 넣지 않고 Apps Script 프록시를 통해 안전하게 실시간 도착 정보를 가져옵니다.</p>
+    </div>
+  </header>
+  <main class="chapter-wrap">
+    <p class="chapter-nav">
+      <a class="btn" href="../textbook.html">목차</a>
+      <a class="btn" href="04.html">이전 장</a>
+      <a class="btn primary" href="06.html">다음 장</a>
+    </p>
+    <article class="book">
+      <p class="eyebrow">Phase 5</p>
+      <h2>비밀키 숨기는 프록시 만들기</h2>
+      <p class="lead">진짜 웹앱은 데이터를 가져오는 것만큼, 보여주면 안 되는 것을 숨기는 능력이 중요합니다.</p>
+      <div class="band"><b>최종 산출물</b><br>버스 프록시 URL, 내 정류소 도착 카드, 보안 설명 기록</div>
+      <div class="teacher"><b>교사용 운영 포인트</b><ul><li>이 장은 어렵지만 매우 중요합니다. 학생에게 모든 세부 기술을 외우게 하기보다 &#39;브라우저에 비밀키를 넣으면 안 된다&#39;는 원칙을 분명히 남깁니다.</li><li>CORS, HTTP/HTTPS, API 키 노출을 한꺼번에 설명하면 어렵습니다. &#39;브라우저가 직접 못 부르는 API를 Apps Script가 대신 부른다&#39;는 그림으로 시작합니다.</li><li>실습 시간이 부족하면 교사용 프록시 URL을 제공하고, 학생은 구조 설명과 설정 변경에 집중하게 합니다.</li></ul></div>
+      <h2>프록시 구조</h2>
+<pre><code>브라우저 앱
+-&gt; Apps Script Web App URL
+-&gt; Script Properties에서 BUS_API_KEY 읽기
+-&gt; 서울 버스 API 호출
+-&gt; 필요한 도착 정보만 브라우저에 반환</code></pre>
+<h2>왜 직접 호출하지 않는가</h2>
+<p>GitHub Pages에 올라간 JavaScript 파일은 누구나 볼 수 있습니다. 여기에 API 키를 적으면 사실상 전교생뿐 아니라 인터넷 전체에 키를 공개하는 셈입니다.</p>
+<p>또 어떤 공공 API는 브라우저에서 직접 호출할 때 CORS나 HTTP/HTTPS 문제를 만납니다. Apps Script는 브라우저 대신 API를 호출하고, 브라우저에는 필요한 결과만 돌려주는 중간 서버 역할을 합니다.</p>
+<h2>따라하기</h2>
+<ul><li>서울 버스 API 키를 준비합니다.</li><li>Apps Script Script Properties에 BUS_API_KEY를 넣습니다.</li><li>Code.gs를 붙여넣고 웹 앱으로 새 배포를 만듭니다.</li><li>실행 사용자는 나, 액세스 권한은 모든 사용자로 둡니다.</li><li>Web App URL이 /exec로 끝나는지 확인합니다.</li><li>앱 설정에 proxyUrl, arsId, routeName을 넣고 조회합니다.</li></ul>
+<h2>보안 설명 문장</h2>
+<p>이 앱은 버스 API 키를 GitHub Pages 코드에 넣지 않습니다. 키는 Apps Script의 Script Properties에 보관하고, 브라우저는 Apps Script 주소만 호출합니다. 그래서 사용자는 도착 정보를 볼 수 있지만 실제 키는 볼 수 없습니다.</p>
+      <h2>AI 프롬프트 카탈로그</h2>
+      <ul><li>GitHub Pages에서 API 키를 직접 넣으면 왜 위험한지 학교 수업 예시로 설명해줘.</li><li>Apps Script 프록시 구조를 브라우저, 프록시, 공공 API 세 단계로 설명해줘.</li><li>CORS와 HTTPS 문제를 초보자에게 비유로 설명해줘.</li></ul>
+      <h2>확인 체크리스트</h2>
+      <ul><li>BUS_API_KEY가 GitHub 파일 안에 없다.</li><li>proxyUrl은 /exec로 끝난다.</li><li>버스 카드가 실시간 연결 상태다.</li><li>프록시가 하는 일을 한 문단으로 설명할 수 있다.</li></ul>
+      <h2>확장 활동</h2>
+      <p>학생이 직접 그림으로 브라우저, Apps Script, 버스 API 사이의 화살표를 그립니다.</p>
+    </article>
+  </main>
+  <footer class="footer"><div class="shell">완성본 체험, GitHub Pages, 공공 API, Google Sheets, Apps Script 프록시, 발표까지 이어지는 생활 데이터 웹앱 교재</div></footer>
+</body>
+</html>

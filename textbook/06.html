@@ -1,1 +1,63 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06장 내 생활권 앱으로 리디자인하기</title><link rel="stylesheet" href="../assets/textbook.css"></head><body><header class="top"><div class="bar"><a class="brand" href="../textbook.html">생활 데이터 웹앱 만들기</a><nav class="nav"><a href="../index.html">샘플 앱</a><a href="../textbook.html">목차</a></nav></div><div class="hero"><p class="eyebrow">Chapter 6</p><h1>내 생활권 앱으로 리디자인하기</h1><p class="lead">샘플을 내 학교, 내 정류소, 내 사용자를 위한 앱으로 바꿉니다.</p></div></header><main class="wrap"><p class="chapter-nav"><a class="btn" href="05.html">이전 장</a><a class="btn primary" href="07.html">다음 장</a></p><article class="book"><div class="band"><b>우와 모먼트</b><br>샘플 앱이 아니라 우리 반이 실제로 볼 수 있는 생활 데이터 앱이 됩니다.</div><h2>목표</h2><ul><li>작동하는 상태를 유지하면서 설정을 단계별로 바꿉니다.</li><li>사용자에게 중요한 카드 순서와 문구를 직접 정합니다.</li><li>AI와 협업해 디자인을 다듬되 동작을 깨뜨리지 않습니다.</li></ul><h2>따라하기</h2><ol><li>현재 앱이 정상 작동하는지 먼저 확인합니다.</li><li>원래 config.js 값을 메모합니다.</li><li>날씨, 급식, 버스 순서로 하나씩 바꾸고 확인합니다.</li><li>카드 제목과 안내 문구를 우리 반 말투로 다듬습니다.</li><li>모바일 화면에서 버튼과 카드가 겹치지 않는지 확인합니다.</li><li>최종 GitHub Pages URL을 제출합니다.</li></ol><h2>체크리스트</h2><ul><li>날씨 지역 이름이 바뀌었다.</li><li>급식 학교 이름이 바뀌었다.</li><li>버스 정류소와 노선이 바뀌었다.</li><li>투표가 Google Sheets에 저장된다.</li><li>모바일 화면에서 읽기 쉽다.</li></ul><h2>AI 프롬프트</h2><pre><code>생활 데이터 앱을 우리 학교 학생이 쓰기 좋게 리디자인하려고 해. 기능은 깨뜨리지 말고 카드 순서, 제목, 안내 문구, 모바일 가독성을 개선하는 제안을 해줘.</code></pre></article></main></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>06장. 내 생활권 앱으로 리디자인하기 | 생활 데이터 웹앱 만들기</title>
+  <meta name="description" content="샘플 앱을 우리 학교, 우리 정류소, 우리 반 사용자를 위한 생활 데이터 도구로 바꿉니다.">
+  <link rel="stylesheet" href="../assets/textbook.css">
+</head>
+<body>
+  <header class="top">
+    <div class="bar shell"><a class="brand" href="../textbook.html">생활 데이터 웹앱 만들기</a><nav class="nav"><a href="../index.html">샘플 앱</a><a href="../textbook.html">교재 목차</a><a href="../textbook/appendix.html">부록</a><a href="../textbook/finish.html">마무리</a></nav></div>
+    <div class="hero shell">
+      <p class="eyebrow">Web Textbook</p>
+      <h1>06장. 내 생활권 앱으로 리디자인하기</h1>
+      <p class="lead">샘플 앱을 우리 학교, 우리 정류소, 우리 반 사용자를 위한 생활 데이터 도구로 바꿉니다.</p>
+    </div>
+  </header>
+  <main class="chapter-wrap">
+    <p class="chapter-nav">
+      <a class="btn" href="../textbook.html">목차</a>
+      <a class="btn" href="05.html">이전 장</a>
+      <a class="btn primary" href="07.html">다음 장</a>
+    </p>
+    <article class="book">
+      <p class="eyebrow">Phase 6</p>
+      <h2>내 생활권 앱으로 리디자인하기</h2>
+      <p class="lead">이제 남이 만든 샘플을 따라 하는 시간이 끝났습니다. 오늘부터는 우리 반이 실제로 쓸 앱으로 바꿉니다.</p>
+      <div class="band"><b>최종 산출물</b><br>내 생활권 앱 URL, 최종 설정표, 개선 전후 캡처</div>
+      <div class="teacher"><b>교사용 운영 포인트</b><ul><li>이 장에서는 기능을 새로 많이 붙이는 것보다 사용자에게 맞추는 경험을 줍니다.</li><li>학생은 디자인을 바꾸다가 기능을 깨뜨리기 쉽습니다. 먼저 설정값, 다음 문구, 마지막 디자인 순서로 제한합니다.</li><li>vibe-coding-class의 자기화 단계처럼 &#39;우리 반 말투&#39;, &#39;우리 학교 정보&#39;, &#39;우리 정류소&#39;를 넣게 하면 결과물의 소유감이 커집니다.</li></ul></div>
+      <h2>자기화 순서</h2>
+<ul><li>작동하는 샘플 상태를 먼저 캡처합니다.</li><li>날씨 지역만 바꾸고 확인합니다.</li><li>급식 학교 설정만 바꾸고 확인합니다.</li><li>버스 정류소와 노선만 바꾸고 확인합니다.</li><li>카드 제목과 안내 문구를 사용자에게 맞게 바꿉니다.</li><li>모바일 화면에서 글자와 버튼이 겹치지 않는지 봅니다.</li></ul>
+<h2>설정표</h2>
+<pre><code>날씨
+- label
+- latitude
+- longitude
+
+급식
+- educationOfficeCode
+- schoolCode
+- schoolName
+- mealCode
+- mealDate
+
+버스
+- proxyUrl
+- arsId
+- routeName</code></pre>
+<h2>좋은 리디자인의 기준</h2>
+<p>좋은 리디자인은 색을 많이 바꾸는 것이 아닙니다. 사용자가 지금 필요한 정보를 먼저 볼 수 있게 순서를 정하고, 상태 문구를 이해하기 쉽게 만들고, 실패했을 때 무엇을 해야 하는지 알려주는 것입니다.</p>
+<p>예를 들어 버스 카드가 실패했을 때 &#39;오류&#39;라고만 쓰기보다 &#39;프록시 URL 또는 정류소번호를 확인하세요&#39;라고 쓰는 편이 더 좋은 도구입니다.</p>
+      <h2>AI 프롬프트 카탈로그</h2>
+      <ul><li>생활 데이터 앱을 우리 학교 학생이 쓰기 좋게 바꾸려면 카드 순서와 문구를 어떻게 다듬으면 좋을지 제안해줘.</li><li>기능은 건드리지 않고 CSS와 문구만 바꾸는 안전한 리디자인 순서를 알려줘.</li><li>내 앱의 오류 메시지를 학생 친화적인 문장으로 바꿔줘.</li></ul>
+      <h2>확인 체크리스트</h2>
+      <ul><li>날씨, 급식, 버스 설정을 하나씩 바꿔 확인했다.</li><li>투표 저장이 여전히 작동한다.</li><li>모바일에서 카드와 버튼이 읽기 쉽다.</li><li>내 앱이 누구를 위한 앱인지 한 문장으로 말할 수 있다.</li></ul>
+      <h2>확장 활동</h2>
+      <p>팀별로 앱 이름을 정하고, 같은 기능을 다른 사용자에게 맞게 표현하는 방법을 비교합니다.</p>
+    </article>
+  </main>
+  <footer class="footer"><div class="shell">완성본 체험, GitHub Pages, 공공 API, Google Sheets, Apps Script 프록시, 발표까지 이어지는 생활 데이터 웹앱 교재</div></footer>
+</body>
+</html>
